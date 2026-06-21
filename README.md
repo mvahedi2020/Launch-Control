@@ -19,7 +19,7 @@ Follow these instructions to run the project locally on your machine. We ensure 
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/mvahedi2020/Launch-Control.git
+   git clone https://github.com/mvahedi2020/Launch-Control.git "Launch Control"
    cd "Launch Control"
    ```
 
