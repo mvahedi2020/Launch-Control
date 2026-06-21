@@ -31,3 +31,5 @@ export default function RootLayout({
     </html>
   );
 }
+// Updating layout metadata
+
