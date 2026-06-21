@@ -2,6 +2,6 @@
 ## Project Objective
 A dedicated Go-To-Market (GTM) tracker for orchestrating complex product launches.
 ## Upcoming Epics
-- [ ] Initial MVP Architecture
-- [ ] Implement Dashboard UI
-- [ ] Add Mock Data Integrations
+- [x] Initial MVP Architecture
+- [x] Implement Dashboard UI
+- [x] Add Mock Data Integrations
