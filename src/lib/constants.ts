@@ -1,2 +1,1 @@
-export const LAUNCH_PHASES = ['Planning', 'Execution', 'Review', 'Launch'];
-
+export const MAX_RETRIES = 3;
