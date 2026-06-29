@@ -47,3 +47,8 @@ Follow these instructions to run the project locally on your machine. We ensure 
 - Cross-Department Dependency Mapping
 - Readiness Scoring
 - Automated Reminder Notifications
+
+## Architecture Updates (20260628_172025)
+- Introduced custom hooks for local state and debouncing.
+- Established baseline Error Boundary component.
+- Centralized shared types and utilities.
