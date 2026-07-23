@@ -9,14 +9,14 @@ type Task = {
 };
 
 const initialTasks: Task[] = [
-  { id: '1', title: 'Code Freeze & Final Review', completed: false },
-  { id: '2', title: 'Database Migrations Executed', completed: false },
-  { id: '3', title: 'Run Final E2E Test Suite', completed: false },
-  { id: '4', title: 'Security Scan & Vulnerability Check', completed: false },
-  { id: '5', title: 'Prepare Rollback Plan', completed: false },
-  { id: '6', title: 'Deploy to Staging Environment', completed: false },
-  { id: '7', title: 'Smoke Test Staging Environment', completed: false },
-  { id: '8', title: 'Deploy to Production', completed: false },
+  { id: '1', title: 'QA Signoff on Staging', completed: false },
+  { id: '2', title: 'Update Marketing Copy for v2', completed: false },
+  { id: '3', title: 'Approve Final Launch Communications', completed: false },
+  { id: '4', title: 'Brief Sales Team on New Features', completed: false },
+  { id: '5', title: 'Confirm Legal Compliance Review', completed: false },
+  { id: '6', title: 'Review Post-Launch Support Plan', completed: false },
+  { id: '7', title: 'Finalize Product Hunt Assets', completed: false },
+  { id: '8', title: 'Verify Partner API Documentation', completed: false },
 ];
 
 export default function LaunchChecklist() {
