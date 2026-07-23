@@ -1,54 +1,43 @@
-<div align="center">
-  <h1>Launch Control</h1>
-  <p><strong>Go-To-Market & Launch Tracking Hub</strong></p>
-</div>
+# Launch Control
 
-<br />
+## 🚀 Product Vision
+A mission-control dashboard for coordinating complex, multi-team feature launches, ensuring Marketing, Sales, and Engineering are aligned.
 
-## 📖 Overview
-Launch Control is a dedicated Go-To-Market (GTM) tracker for orchestrating complex product launches. It tracks marketing copy, sales enablement, legal approvals, and engineering release readiness in one consolidated view with dependency mapping.
+## 🎯 Target Personas
+- **Product Marketing Managers (PMMs):** Needs to track go-to-market readiness.
+- **Release Managers:** Needs a single source of truth for deployment status.
 
-## 💻 Local Development
+## 🛠️ Tech Stack Note
+As a Product Manager, I partnered with engineering to scaffold this MVP using modern standards: **Next.js 15 (App Router), React 19, and Tailwind CSS**. 
 
-Follow these instructions to run the project locally on your machine. We ensure no security data is exposed by using an example environment file.
+## 💻 How to Run Locally (For Recruiters & Engineers)
+If you are evaluating my portfolio and want to test the interactive UI locally, follow these steps. 
 
 ### Prerequisites
-- Node.js 18+ installed
+- Node.js (v18 or higher)
+- npm or yarn
 
-### Setup Steps
-
-1. **Clone the repository:**
+### Installation
+1. Clone this repository.
+2. Install dependencies:
    ```bash
-   git clone https://github.com/mvahedi2020/Launch-Control.git "Launch Control"
-   cd "Launch Control"
+   npm install --legacy-peer-deps
    ```
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Environment Setup:**
-   Copy the example environment file to create your local environment variables. Never commit your `.env.local` file!
-   ```bash
-   cp .env.example .env.local
-   ```
-
-4. **Start the development server:**
+### Running the Demo
+1. Start the local development server:
    ```bash
    npm run dev
    ```
+2. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-5. **View the Application:**
-   Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
+> **⚠️ IMPORTANT AUTHENTICATION BYPASS**
+> To make it extremely easy for you to review this project without needing to configure complex GitHub/Google OAuth secrets (`AUTH_SECRET`), **you can bypass the login screen**. 
+> 
+> Simply navigate to:
+> `http://localhost:3000/?demo=true`
+> 
+> This will instantly grant you access to the core dashboard UI for evaluation purposes.
 
-## ✨ Features
-- GTM Launch Checklist
-- Cross-Department Dependency Mapping
-- Readiness Scoring
-- Automated Reminder Notifications
-
-## Architecture Updates (20260628_172025)
-- Introduced custom hooks for local state and debouncing.
-- Established baseline Error Boundary component.
-- Centralized shared types and utilities.
+---
+*Maintained by Mo - Product Manager*
