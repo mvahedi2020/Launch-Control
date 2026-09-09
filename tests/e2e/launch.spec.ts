@@ -1,0 +1,39 @@
+import { expect, test } from '@playwright/test'
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Reset sample' }).click()
+})
+
+test('enforces gates, records go, and completes a simulated launch', async ({ page }) => {
+  const launch = page.getByRole('button', { name: 'Simulate launch' })
+  await expect(launch).toBeDisabled()
+  await page.getByLabel('Support enablement state').selectOption('ready')
+  await page.getByLabel('Support runbook rehearsed evidence').fill('Sample rehearsal notes')
+  await page.getByText('Support runbook rehearsed', { exact: true }).click()
+  await page.getByLabel('Launch decision').getByText('Go', { exact: true }).click()
+  await page.getByLabel('Decision rationale').fill('All required sample evidence reviewed.')
+  await page.getByRole('button', { name: 'Record decision' }).click()
+  await expect(launch).toBeEnabled()
+  await launch.click()
+  await expect(page.getByText('Launch complete', { exact: true })).toBeVisible()
+  await page.getByRole('link', { name: 'Timeline', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Launch completed' })).toBeVisible()
+  const download = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Export summary' }).click()
+  expect((await download).suggestedFilename()).toBe('launch-control-summary.json')
+})
+
+test('requires an explicit incident response after launch', async ({ page }) => {
+  await page.getByLabel('Support enablement state').selectOption('ready')
+  await page.getByLabel('Support runbook rehearsed evidence').fill('Sample rehearsal notes')
+  await page.getByText('Support runbook rehearsed', { exact: true }).click()
+  await page.getByLabel('Launch decision').getByText('Go', { exact: true }).click()
+  await page.getByLabel('Decision rationale').fill('All required sample evidence reviewed.')
+  await page.getByRole('button', { name: 'Record decision' }).click()
+  await page.getByRole('button', { name: 'Simulate launch' }).click()
+  await page.getByRole('button', { name: 'Run sample post-launch issue' }).click()
+  await expect(page.getByText('Exports delayed')).toBeVisible()
+  await page.getByRole('button', { name: 'Pause rollout' }).click()
+  await expect(page.getByText('Rollout paused', { exact: true })).toBeVisible()
+})

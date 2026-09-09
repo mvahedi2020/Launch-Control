@@ -1,0 +1,199 @@
+{
+  "product": "Launch Control sample",
+  "exportedAt": "2026-09-09T01:10:41.173Z",
+  "readiness": {
+    "passed": 6,
+    "total": 6,
+    "blockers": []
+  },
+  "launch": {
+    "name": "Analytics 2.4",
+    "window": "September 18 · 09:00 PT",
+    "owners": [
+      {
+        "id": "sarah",
+        "name": "Sarah Kim",
+        "role": "Launch lead",
+        "initials": "SK"
+      },
+      {
+        "id": "omar",
+        "name": "Omar Reed",
+        "role": "Engineering",
+        "initials": "OR"
+      },
+      {
+        "id": "jules",
+        "name": "Jules Martin",
+        "role": "Customer success",
+        "initials": "JM"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "billing",
+        "name": "Billing migration",
+        "ownerId": "omar",
+        "state": "ready",
+        "note": "Dry run complete"
+      },
+      {
+        "id": "enablement",
+        "name": "Support enablement",
+        "ownerId": "jules",
+        "state": "ready",
+        "note": "Final brief pending"
+      },
+      {
+        "id": "status",
+        "name": "Status page notice",
+        "ownerId": "sarah",
+        "state": "ready",
+        "note": "Scheduled in sample plan"
+      }
+    ],
+    "checks": [
+      {
+        "id": "qa",
+        "name": "Regression suite reviewed",
+        "ownerId": "omar",
+        "mandatory": true,
+        "complete": true,
+        "evidence": "Sample QA report #184",
+        "dependencyIds": [
+          "billing"
+        ]
+      },
+      {
+        "id": "privacy",
+        "name": "Privacy review recorded",
+        "ownerId": "sarah",
+        "mandatory": true,
+        "complete": true,
+        "evidence": "Sample review PRV-32",
+        "dependencyIds": [
+          "billing"
+        ]
+      },
+      {
+        "id": "support",
+        "name": "Support runbook rehearsed",
+        "ownerId": "jules",
+        "mandatory": true,
+        "complete": true,
+        "evidence": "Sample rehearsal completed with the support lead.",
+        "dependencyIds": [
+          "enablement"
+        ]
+      },
+      {
+        "id": "brief",
+        "name": "Executive brief distributed",
+        "ownerId": "sarah",
+        "mandatory": false,
+        "complete": false,
+        "evidence": "",
+        "dependencyIds": [
+          "status"
+        ]
+      }
+    ],
+    "decision": {
+      "value": "go",
+      "note": "Required evidence reviewed. Proceed with the sample rollout.",
+      "recordedAt": "Sep 8, 2026, 6:10 PM PDT"
+    },
+    "phase": "rolledback",
+    "timeline": [
+      {
+        "id": "opened",
+        "at": "Sep 8, 2026, 9:02 AM PDT",
+        "title": "Launch room opened",
+        "detail": "Sarah created the sample readiness review.",
+        "kind": "info"
+      },
+      {
+        "id": "qa-ready",
+        "at": "Sep 8, 2026, 9:18 AM PDT",
+        "title": "Regression evidence added",
+        "detail": "Omar attached sample QA report #184.",
+        "kind": "success"
+      },
+      {
+        "id": "dependency-1788916240529",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Dependency state updated",
+        "detail": "Support enablement changed to ready.",
+        "kind": "info"
+      },
+      {
+        "id": "evidence-1788916240592",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Readiness evidence recorded",
+        "detail": "Support runbook rehearsed: Sample rehearsal completed with the support lead.",
+        "kind": "info"
+      },
+      {
+        "id": "check-1788916240598",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Readiness check completed",
+        "detail": "Support runbook rehearsed",
+        "kind": "success"
+      },
+      {
+        "id": "decision-1788916240725",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "No-go decision recorded",
+        "detail": "Hold for one final review.",
+        "kind": "warning"
+      },
+      {
+        "id": "decision-1788916240824",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Go decision recorded",
+        "detail": "Required evidence reviewed. Proceed with the sample rollout.",
+        "kind": "success"
+      },
+      {
+        "id": "dependency-1788916240838",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Dependency state updated",
+        "detail": "Billing migration changed to blocked.",
+        "kind": "warning"
+      },
+      {
+        "id": "dependency-1788916240852",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Dependency state updated",
+        "detail": "Billing migration changed to ready.",
+        "kind": "info"
+      },
+      {
+        "id": "launch-1788916240890",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Launch completed",
+        "detail": "Analytics 2.4 simulated launch completed.",
+        "kind": "success"
+      },
+      {
+        "id": "incident-1788916240990",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Sample issue detected",
+        "detail": "Export jobs are delayed for a sample customer segment.",
+        "kind": "critical"
+      },
+      {
+        "id": "rollback-1788916241040",
+        "at": "Sep 8, 2026, 6:10 PM PDT",
+        "title": "Release rolled back",
+        "detail": "Sample traffic returned to the prior release.",
+        "kind": "warning"
+      }
+    ],
+    "incident": {
+      "active": false,
+      "openedAt": "Sep 8, 2026, 6:10 PM PDT",
+      "decision": "rollback"
+    }
+  }
+}

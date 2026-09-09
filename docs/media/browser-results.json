@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:4194/Launch-Control/",
+  "passed": true,
+  "scenarios": [
+    "locked prerequisites",
+    "evidence",
+    "no-go blocks",
+    "go allows",
+    "changed gate reblocks",
+    "launch persistence",
+    "postlaunch rollback",
+    "timeline",
+    "export",
+    "navigation reset",
+    "mobile no overflow",
+    "storage unavailable"
+  ],
+  "errors": []
+}
