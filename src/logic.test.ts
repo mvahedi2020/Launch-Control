@@ -34,6 +34,18 @@ describe('launch gate policy', () => {
     expect(revoked.timeline.at(-1)?.title).toBe('Go decision withdrawn')
   })
 
+  it('withdraws a recorded go when mandatory evidence is removed', () => {
+    const plan = clonePlan(samplePlan)
+    plan.dependencies[1].state = 'ready'
+    plan.checks[2].complete = true
+    plan.checks[2].evidence = 'Sample rehearsal notes'
+    plan.decision = { value: 'go', note: 'All gates reviewed', recordedAt: 'now' }
+    plan.checks[0].evidence = ''
+    const revoked = revokeGoIfBlocked(plan, 'later')
+    expect(revoked.decision).toBeNull()
+    expect(revoked.timeline.at(-1)?.detail).toContain('required gate changed')
+  })
+
   it('appends timeline evidence without mutating the original', () => {
     const next = appendEvent(samplePlan, { id: 'test', at: 'now', title: 'Test', detail: 'Recorded', kind: 'info' })
     expect(next.timeline).toHaveLength(samplePlan.timeline.length + 1)

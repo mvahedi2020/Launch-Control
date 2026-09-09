@@ -67,6 +67,7 @@ export default function App() {
     const at = now()
     if ('complete' in patch && patch.complete !== item.complete) return revokeGoIfBlocked(appendEvent(next, { id: `check-${Date.now()}`, at, title: patch.complete ? 'Readiness check completed' : 'Readiness check reopened', detail: item.name, kind: patch.complete ? 'success' : 'warning' }), at)
     if ('ownerId' in patch && patch.ownerId !== item.ownerId) return revokeGoIfBlocked(appendEvent(next, { id: `check-owner-${Date.now()}`, at, title: 'Check owner updated', detail: `${item.name} assigned to ${ownerName(current, patch.ownerId ?? '')}.`, kind: patch.ownerId ? 'info' : 'warning' }), at)
+    if ('evidence' in patch && patch.evidence !== item.evidence) return revokeGoIfBlocked(appendEvent(next, { id: `check-evidence-${Date.now()}`, at, title: 'Readiness evidence updated', detail: item.name, kind: patch.evidence?.trim() ? 'info' : 'warning' }), at)
     return next
   })
   const recordEvidence = (id: string) => setPlan((current) => {

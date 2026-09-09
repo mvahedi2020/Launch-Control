@@ -1,6 +1,6 @@
 {
   "product": "Launch Control sample",
-  "exportedAt": "2026-09-09T04:27:35.694Z",
+  "exportedAt": "2026-09-09T04:32:22.226Z",
   "readiness": {
     "passed": 6,
     "total": 6,
@@ -101,7 +101,7 @@
     "decision": {
       "value": "go",
       "note": "Gate was rechecked and all required evidence remains valid.",
-      "recordedAt": "Sep 8, 2026, 9:27 PM PDT"
+      "recordedAt": "Sep 8, 2026, 9:32 PM PDT"
     },
     "phase": "rolledback",
     "timeline": [
@@ -120,85 +120,92 @@
         "kind": "success"
       },
       {
-        "id": "dependency-1788928054965",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "dependency-1788928341502",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Dependency state updated",
         "detail": "Support enablement changed to ready.",
         "kind": "info"
       },
       {
-        "id": "evidence-1788928055031",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "check-evidence-1788928341517",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
+        "title": "Readiness evidence updated",
+        "detail": "Support runbook rehearsed",
+        "kind": "info"
+      },
+      {
+        "id": "evidence-1788928341561",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Readiness evidence recorded",
         "detail": "Support runbook rehearsed: Sample rehearsal completed with the support lead.",
         "kind": "info"
       },
       {
-        "id": "check-1788928055038",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "check-1788928341568",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Readiness check completed",
         "detail": "Support runbook rehearsed",
         "kind": "success"
       },
       {
-        "id": "decision-1788928055163",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "decision-1788928341693",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "No-go decision recorded",
         "detail": "Hold for one final review.",
         "kind": "warning"
       },
       {
-        "id": "decision-1788928055263",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "decision-1788928341776",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Go decision recorded",
         "detail": "Required evidence reviewed. Proceed with the sample rollout.",
         "kind": "success"
       },
       {
-        "id": "dependency-1788928055286",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "dependency-1788928341789",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Dependency state updated",
         "detail": "Billing migration changed to blocked.",
         "kind": "warning"
       },
       {
-        "id": "go-revoked-1788928055286",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "go-revoked-1788928341789",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Go decision withdrawn",
         "detail": "A required gate changed after Go was recorded. Clear the blocker and record a new decision.",
         "kind": "warning"
       },
       {
-        "id": "dependency-1788928055311",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "dependency-1788928341816",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Dependency state updated",
         "detail": "Billing migration changed to ready.",
         "kind": "info"
       },
       {
-        "id": "decision-1788928055395",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "decision-1788928341910",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Go decision recorded",
         "detail": "Gate was rechecked and all required evidence remains valid.",
         "kind": "success"
       },
       {
-        "id": "launch-1788928055429",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "launch-1788928341960",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Launch completed",
         "detail": "Analytics 2.4 simulated launch completed.",
         "kind": "success"
       },
       {
-        "id": "incident-1788928055529",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "incident-1788928342060",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Sample issue detected",
         "detail": "Export jobs are delayed for a sample customer segment.",
         "kind": "critical"
       },
       {
-        "id": "rollback-1788928055578",
-        "at": "Sep 8, 2026, 9:27 PM PDT",
+        "id": "rollback-1788928342109",
+        "at": "Sep 8, 2026, 9:32 PM PDT",
         "title": "Release rolled back",
         "detail": "Sample traffic returned to the prior release.",
         "kind": "warning"
@@ -206,7 +213,7 @@
     ],
     "incident": {
       "active": false,
-      "openedAt": "Sep 8, 2026, 9:27 PM PDT",
+      "openedAt": "Sep 8, 2026, 9:32 PM PDT",
       "decision": "rollback"
     }
   }
