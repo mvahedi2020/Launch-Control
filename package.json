@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run typecheck && vite build && mkdir -p dist/docs/product && cp docs/product/Case_Study.md dist/docs/product/Case_Study.md",
+    "build": "npm run typecheck && vite build && cp -R docs dist/docs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run src",

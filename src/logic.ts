@@ -29,6 +29,14 @@ export function canLaunch(plan: LaunchPlan): boolean {
   return plan.phase === 'prelaunch' && readiness(plan).blockers.length === 0 && plan.decision?.value === 'go'
 }
 
+export function revokeGoIfBlocked(plan: LaunchPlan, at: string): LaunchPlan {
+  if (plan.decision?.value !== 'go' || readiness(plan).blockers.length === 0) return plan
+  return appendEvent(
+    { ...plan, decision: null },
+    { id: `go-revoked-${Date.now()}`, at, title: 'Go decision withdrawn', detail: 'A required gate changed after Go was recorded. Clear the blocker and record a new decision.', kind: 'warning' },
+  )
+}
+
 export function appendEvent(plan: LaunchPlan, event: TimelineEvent): LaunchPlan {
   return { ...plan, timeline: [...plan.timeline, event] }
 }

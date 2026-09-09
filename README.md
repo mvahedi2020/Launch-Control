@@ -31,6 +31,7 @@ All people, evidence, launch records, and outcomes are fictional. No control dep
 ## Product evidence
 
 - [Case study](docs/product/Case_Study.md)
+- [Control matrix](docs/product/Control_Matrix.md)
 - [Requirements and proposed success measures](docs/product/PRD.md)
 - [Commercial hypotheses](docs/product/GTM_Strategy.md)
 - [Implemented / next / later](docs/product/Sprint_Backlog.md)

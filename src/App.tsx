@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ArrowUpRight, Check, ChevronRight, CircleCheck, Clock3, Download, RotateCcw, ShieldCheck, Zap } from 'lucide-react'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, canLaunch, checkUnlocked, ownerName, readiness } from './logic'
+import { appendEvent, canLaunch, checkUnlocked, ownerName, readiness, revokeGoIfBlocked } from './logic'
 import type { GateState, LaunchPlan, Phase } from './types'
 
 const STORAGE_KEY = 'northstar.launch-control.session.v1'
@@ -44,6 +44,10 @@ export default function App() {
     }
   }, [plan])
 
+  useEffect(() => {
+    if (status.blockers.length && decisionChoice === 'go') setDecisionChoice('')
+  }, [decisionChoice, status.blockers.length])
+
   const reset = () => {
     setPlan(clonePlan(samplePlan)); setDecisionChoice(''); setDecisionNote('')
     try { localStorage.removeItem(STORAGE_KEY); setWarning('') } catch { setWarning('Browser storage is unavailable. The sample launch is restored for this tab.') }
@@ -53,14 +57,16 @@ export default function App() {
     if (!item || item[field] === value) return current
     const next = { ...current, dependencies: current.dependencies.map((dependency) => dependency.id === id ? { ...dependency, [field]: value } as typeof dependency : dependency) }
     const detail = field === 'state' ? `${item.name} changed to ${value}.` : `${item.name} assigned to ${ownerName(current, value)}.`
-    return appendEvent(next, { id: `dependency-${Date.now()}`, at: now(), title: field === 'state' ? 'Dependency state updated' : 'Dependency owner updated', detail, kind: value === 'blocked' || !value ? 'warning' : 'info' })
+    const at = now()
+    return revokeGoIfBlocked(appendEvent(next, { id: `dependency-${Date.now()}`, at, title: field === 'state' ? 'Dependency state updated' : 'Dependency owner updated', detail, kind: value === 'blocked' || !value ? 'warning' : 'info' }), at)
   })
   const updateCheck = (id: string, patch: Partial<LaunchPlan['checks'][number]>) => setPlan((current) => {
     const item = current.checks.find((check) => check.id === id)
     if (!item) return current
     const next = { ...current, checks: current.checks.map((check) => check.id === id ? { ...check, ...patch } : check) }
-    if ('complete' in patch && patch.complete !== item.complete) return appendEvent(next, { id: `check-${Date.now()}`, at: now(), title: patch.complete ? 'Readiness check completed' : 'Readiness check reopened', detail: item.name, kind: patch.complete ? 'success' : 'warning' })
-    if ('ownerId' in patch && patch.ownerId !== item.ownerId) return appendEvent(next, { id: `check-owner-${Date.now()}`, at: now(), title: 'Check owner updated', detail: `${item.name} assigned to ${ownerName(current, patch.ownerId ?? '')}.`, kind: patch.ownerId ? 'info' : 'warning' })
+    const at = now()
+    if ('complete' in patch && patch.complete !== item.complete) return revokeGoIfBlocked(appendEvent(next, { id: `check-${Date.now()}`, at, title: patch.complete ? 'Readiness check completed' : 'Readiness check reopened', detail: item.name, kind: patch.complete ? 'success' : 'warning' }), at)
+    if ('ownerId' in patch && patch.ownerId !== item.ownerId) return revokeGoIfBlocked(appendEvent(next, { id: `check-owner-${Date.now()}`, at, title: 'Check owner updated', detail: `${item.name} assigned to ${ownerName(current, patch.ownerId ?? '')}.`, kind: patch.ownerId ? 'info' : 'warning' }), at)
     return next
   })
   const recordEvidence = (id: string) => setPlan((current) => {
@@ -75,7 +81,7 @@ export default function App() {
   }
 
   const recordDecision = () => {
-    if (!decisionChoice || decisionNote.trim().length < 4) return
+    if (!decisionChoice || decisionNote.trim().length < 4 || (decisionChoice === 'go' && status.blockers.length > 0)) return
     const recordedAt = now()
     setPlan((current) => appendEvent({ ...current, decision: { value: decisionChoice, note: decisionNote.trim(), recordedAt } }, { id: `decision-${Date.now()}`, at: recordedAt, title: `${decisionChoice === 'go' ? 'Go' : 'No-go'} decision recorded`, detail: decisionNote.trim(), kind: decisionChoice === 'go' ? 'success' : 'warning' }))
   }
@@ -126,11 +132,11 @@ export default function App() {
 
         <aside className="decision-panel">
           <p className="eyebrow">03 · Decision</p><h2>Record the call</h2><p>A launch decision needs a clear choice and rationale. Any later gate change is still enforced.</p>
-          <div className="decision-options" role="radiogroup" aria-label="Launch decision"><label className={decisionChoice === 'go' ? 'selected' : ''}><input type="radio" name="decision" value="go" checked={decisionChoice === 'go'} onChange={() => setDecisionChoice('go')} /><CircleCheck size={20} /><span><b>Go</b><small>Proceed when all gates clear</small></span></label><label className={decisionChoice === 'no-go' ? 'selected no-go' : ''}><input type="radio" name="decision" value="no-go" checked={decisionChoice === 'no-go'} onChange={() => setDecisionChoice('no-go')} /><AlertTriangle size={20} /><span><b>No-go</b><small>Hold this launch window</small></span></label></div>
+          <div className="decision-options" role="radiogroup" aria-label="Launch decision"><label className={`${decisionChoice === 'go' ? 'selected' : ''} ${status.blockers.length ? 'locked-choice' : ''}`}><input type="radio" name="decision" value="go" checked={decisionChoice === 'go'} disabled={status.blockers.length > 0} onChange={() => setDecisionChoice('go')} /><CircleCheck size={20} /><span><b>Go</b><small>{status.blockers.length ? 'Clear every required gate first' : 'Proceed when all gates clear'}</small></span></label><label className={decisionChoice === 'no-go' ? 'selected no-go' : ''}><input type="radio" name="decision" value="no-go" checked={decisionChoice === 'no-go'} onChange={() => setDecisionChoice('no-go')} /><AlertTriangle size={20} /><span><b>No-go</b><small>Hold this launch window</small></span></label></div>
           <label className="rationale"><span>Decision rationale</span><textarea aria-label="Decision rationale" value={decisionNote} onChange={(event) => setDecisionNote(event.target.value)} placeholder="What supports this decision?" rows={3} /></label>
           <button className="button secondary full" onClick={recordDecision} disabled={!decisionChoice || decisionNote.trim().length < 4}>Record decision</button>
           {plan.decision && <div className={`recorded ${plan.decision.value}`}><ShieldCheck size={18} /><div><b>{plan.decision.value === 'go' ? 'Go recorded' : 'No-go recorded'}</b><small>{plan.decision.recordedAt}</small></div></div>}
-          <div className="launch-rule"><p>{status.blockers.length ? status.blockers[0] : plan.decision?.value !== 'go' ? 'Record a go decision to unlock launch.' : 'Required gates and decision are ready.'}</p><button className="button primary full" onClick={launch} disabled={!canLaunch(plan)}><Zap size={17} />Simulate launch</button></div>
+          <div className="launch-rule"><p>{status.blockers.length ? `${status.blockers[0]}. Any recorded Go is withdrawn until this is resolved.` : plan.decision?.value !== 'go' ? 'Record a go decision to unlock launch.' : 'Required gates and decision are ready.'}</p><button className="button primary full" onClick={launch} disabled={!canLaunch(plan)}><Zap size={17} />Simulate launch</button></div>
           {plan.phase === 'launched' && !plan.incident?.active && <button className="incident-trigger" onClick={openIncident}><AlertTriangle size={16} />Run sample post-launch issue</button>}
           {plan.incident?.active && <div className="incident-card" role="alert"><span>Sample incident · SEV 2</span><h3>Exports delayed</h3><p>Choose how the simulated rollout should respond.</p><button onClick={() => decideIncident('pause')}>Pause rollout</button><button className="danger" onClick={() => decideIncident('rollback')}>Roll back release</button></div>}
         </aside></div>
