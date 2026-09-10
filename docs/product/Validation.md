@@ -14,7 +14,7 @@ Automated logic tests verify that unresolved dependencies, incomplete mandatory 
 
 Conduct five moderated sessions with product operations or release leads. Ask each participant to identify the initial blockers, supply the missing readiness information, record a decision, launch the simulation, respond to the sample incident, and explain the timeline.
 
-Measure unassisted completion, time to identify blockers, incorrect launch attempts, response-decision completion, and confidence on a five-point scale. Proposed thresholds are 85% unassisted completion and a median blocker diagnosis below 90 seconds.
+Measure unassisted completion, time to identify blockers, incorrect launch attempts, response-decision completion, and confidence on a five-point scale. The five sessions are formative: use them to identify failures before setting a percentage threshold. A later 20-participant study can test the proposed 85% unassisted completion target (17/20), while the formative work can assess whether blocker diagnosis is understandable within 90 seconds.
 
 ## Known limits
 

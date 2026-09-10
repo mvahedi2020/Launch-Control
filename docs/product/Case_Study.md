@@ -6,9 +6,9 @@ Launch decisions often happen across status documents, chat threads, checklists,
 
 Launch Control turns those questions into enforced product states for Northstar, a fictional B2B SaaS company. A simulated launch stays locked until all dependencies are ready, every mandatory check has an owner and evidence, and a go decision is recorded. A timestamped timeline preserves the decision trail. After launch, a sample incident forces an explicit pause or rollback response.
 
-## My role
+## My role as Product Manager
 
-I defined the product concept, launch policy, interaction requirements, information architecture, sample scenario, acceptance criteria, and validation plan. The prototype was implemented with Google Antigravity; preparation and verification of this version were assisted by AI tools. This is a personal portfolio artifact, not a claim that I wrote the application code, managed an engineering team, or shipped a Northstar product.
+I defined the product concept, launch policy, interaction requirements, information architecture, sample scenario, acceptance criteria, and validation plan. Google Antigravity and other AI tools assisted with implementation and verification. This is a personal portfolio artifact, not a claim that I wrote the application code, managed an engineering team, or shipped a Northstar product.
 
 ## Product choices
 
@@ -20,4 +20,6 @@ I defined the product concept, launch policy, interaction requirements, informat
 
 ## Proposed measures
 
-A future pilot would target 95% of mandatory gates with an owner and evidence before the launch window, a 25% reduction in time spent reconstructing decision history, and 100% of high-severity post-launch signals with a recorded response decision. These are proposed targets; no production outcomes or user research are claimed.
+Begin with five formative sessions to identify misunderstandings in the launch workflow. A later 20-participant study would test whether 18 of 20 reviewers can explain the blockers and 17 of 20 can complete the gated flow without help. Every started sample-incident scenario should end with a recorded pause or rollback response; abandonment remains in the denominator.
+
+See the [PRD](PRD.md#evaluation-plan--proposed-not-measured) for definitions and guardrails and the [validation plan](Validation.md) for the study sequence. These are proposed targets; no production outcomes or user research are claimed.

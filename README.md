@@ -2,7 +2,7 @@
 
 Launch readiness often lives across checklists, status documents, and chat. This product management case study explores how a B2B SaaS launch lead can enforce prerequisites, capture decision evidence, and preserve a clear response trail.
 
-**[Try the interactive demo](https://mvahedi2020.github.io/Launch-Control/)** · [Watch the workflow](docs/media/workflow.webm) · [Read the case study](docs/product/Case_Study.md)
+**[Try the interactive demo](https://mvahedi2020.github.io/Launch-Control/)** · [Product requirements](docs/product/PRD.md) · [Case study](docs/product/Case_Study.md) · [Validation plan](docs/product/Validation.md) · [Watch the workflow](docs/media/workflow.webm)
 
 ![Launch Control sample workspace](docs/media/screenshot.png)
 
@@ -12,7 +12,9 @@ Northstar, a fictional operations platform, is preparing Analytics 2.4. Resolve 
 
 ## My role
 
-I use this case study to make product definition, launch policy, workflow design, requirements, and evaluation visible. The prototype was implemented with Google Antigravity; preparation and verification of this version were assisted by AI tools. This is a personal product case study, not a claim that I wrote the application code or managed an engineering team.
+I owned the product work: problem framing, launch-policy tradeoffs, requirements, workflows, fictional sample-data design, acceptance criteria, and evaluation plan. [Start with the PM review packet](docs/product/PRD.md) for the product brief, enforced decision rules, and testable acceptance criteria.
+
+Google Antigravity and other AI tools assisted with implementation and verification. This is not a claim that I manually wrote the application code, managed an engineering team, or shipped a Northstar product.
 
 ## Product decisions
 
@@ -30,9 +32,9 @@ All people, evidence, launch records, and outcomes are fictional. No control dep
 
 ## Product evidence
 
-- [Case study](docs/product/Case_Study.md)
+- [Product requirements — problem, users, decisions, workflow, acceptance criteria, and proposed measures](docs/product/PRD.md)
+- [Case study — product framing and portfolio narrative](docs/product/Case_Study.md)
 - [Control matrix](docs/product/Control_Matrix.md)
-- [Requirements and proposed success measures](docs/product/PRD.md)
 - [Commercial hypotheses](docs/product/GTM_Strategy.md)
 - [Implemented / next / later](docs/product/Sprint_Backlog.md)
 - [Prototype validation](docs/product/Validation.md)
