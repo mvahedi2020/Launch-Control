@@ -23,3 +23,11 @@ I defined the product concept, launch policy, interaction requirements, informat
 Begin with five formative sessions to identify misunderstandings in the launch workflow. A later 20-participant study would test whether 18 of 20 reviewers can explain the blockers and 17 of 20 can complete the gated flow without help. Every started sample-incident scenario should end with a recorded pause or rollback response; abandonment remains in the denominator.
 
 See the [PRD](PRD.md#evaluation-plan--proposed-not-measured) for definitions and guardrails and the [validation plan](Validation.md) for the study sequence. These are proposed targets; no production outcomes or user research are claimed.
+
+## Next investment decision
+
+The central decision is whether an explicit readiness rule improves a launch lead's reasoning. The prototype demonstrates state transitions, but it cannot establish whether participants understand evidence quality, the cost of renewed approval, or the difference between a local timeline and an operational audit log.
+
+Use the [discovery plan](Discovery%20Plan.md) and [scoring protocol](Validation.md) to inspect those questions before adding templates. If people follow the clicks but still treat arbitrary text as verified proof, revise the explanation rather than claim success. If they understand the workflow yet prefer an existing checklist, reconsider whether a separate workspace merits investment.
+
+The [decision record](Product%20Decisions.md) exposes the alternatives and costs; the [risk register](Product%20Risks.md) identifies signals that would change the direction. The [commercial hypotheses](GTM_Strategy.md) remain a proposed path, not evidence of a launched business.
