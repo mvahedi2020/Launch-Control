@@ -51,6 +51,19 @@ As a launch lead, I can verify owners, dependencies, checks, and evidence before
 | Support recovery and review | Sample reset restores fictional fixtures. The current readiness, decision, and timeline can be exported as local JSON. Storage failures are explained while the current tab remains usable. |
 | Make the demo broadly inspectable | Hash navigation supports browser back and forward. Native labels, visible focus treatment, keyboard controls, responsive layouts, empty states, and errors are supported. |
 
+## Acceptance examples at the decision boundary
+
+| Scenario | Current required behavior | Product interpretation |
+|---|---|---|
+| A dependency is Ready but has no owner | Readiness remains blocked and its dependent check remains locked. | Status alone does not establish responsibility. |
+| Mandatory evidence contains only spaces | The check does not pass. | Presence requires nonblank text; the app does not verify the truth of that text. |
+| Required evidence is removed after Go | Withdraw Go and append the withdrawal event. | A previous decision must not silently survive a changed prerequisite. |
+| The missing evidence is restored | A new Go decision is still required before simulated launch. | Resolving a blocker is distinct from granting approval. |
+| An optional check is incomplete | It does not enter the required-gate calculation. | Optional work cannot secretly become a launch prerequisite. |
+| The launch has already completed | A second simulated launch is unavailable in that phase. | A launch action belongs to a particular state transition. |
+
+Rationale and evidence are review inputs, not independently verified proof. Authenticity, approval permissions, and production policy enforcement remain outside this sample.
+
 ## Explicit non-goals
 
 Deployment orchestration, paging, traffic control, source-control integration, authentication, production incident management, notifications, approval permissions, and real launch data are outside this sample. A simulated launch must never be presented as a software deployment.
