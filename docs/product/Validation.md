@@ -19,3 +19,11 @@ Measure unassisted completion, time to identify blockers, incorrect launch attem
 ## Known limits
 
 The scenario, evidence, and people are fictional. Local timestamps and browser persistence do not represent production audit controls. The demo has not established usability, demand, reliability, or business impact.
+
+## Proposed session scoring protocol
+
+Use the same seeded scenario for every participant and record whether help was needed before a task finished. A blocker explanation passes when it identifies the missing dependency or required evidence and connects that condition to the disabled launch action; repeating the percentage alone is insufficient. Gated-flow completion passes only when the participant supplies the sample information, records a reasoned decision, and simulates launch without moderator instructions.
+
+In the later 20-person study, retain all 20 in each blocker-explanation and completion denominator, including abandoned and assisted attempts. Report 18/20 and 17/20 as proposed thresholds, not population estimates. Score incident response separately as recorded pause or rollback decisions divided by all started incident scenarios; retain abandoned scenarios in that denominator.
+
+Record whether the participant understands that evidence text is not verified and no real software is deployed. A correct click sequence with either misconception should trigger design review even if completion targets are met. The initial five sessions identify problems and refine these tasks; they are not the later quantitative study. No sessions have been conducted.
