@@ -14,13 +14,13 @@ Northstar, a fictional operations platform, is preparing Analytics 2.4. Resolve 
 
 I owned the product work: problem framing, launch-policy tradeoffs, requirements, workflows, fictional sample-data design, acceptance criteria, and evaluation plan. [Start with the PM review packet](docs/product/PRD.md) for the product brief, enforced decision rules, and testable acceptance criteria.
 
-Google Antigravity and other AI tools assisted with implementation and verification. This is not a claim that I manually wrote the application code, managed an engineering team, or shipped a Northstar product.
+AI tools assisted with implementation and verification. This is not a claim that I manually wrote the application code, managed an engineering team, or shipped a Northstar product.
 
 ## Review my product management work
 
 Start with the [PRD and acceptance examples](docs/product/PRD.md), then examine [alternatives and tradeoffs](docs/product/Product%20Decisions.md). The [discovery plan](docs/product/Discovery%20Plan.md), [validation protocol](docs/product/Validation.md), and [product risks](docs/product/Product%20Risks.md) explain what would justify or stop the next investment. The [backlog](docs/product/Sprint_Backlog.md) separates implemented behavior from evidence-dependent proposals.
 
-This route makes problem framing, prioritization, requirements, and evaluation visible without reading application code. All research and commercial plans are proposed; Google Antigravity and other AI tools assisted with implementation and verification of the sample.
+This route makes problem framing, prioritization, requirements, and evaluation visible without reading application code. All research and commercial plans are proposed; AI tools assisted with implementation and verification of the sample.
 
 ## Product decisions
 
