@@ -12,15 +12,11 @@ Northstar, a fictional operations platform, is preparing Analytics 2.4. Resolve 
 
 ## My role as Product Manager
 
-I owned the product work: problem framing, launch-policy tradeoffs, requirements, workflows, fictional sample-data design, acceptance criteria, and evaluation plan. [Start with the PM review packet](docs/product/PRD.md) for the product brief, enforced decision rules, and testable acceptance criteria.
+I was the Product Manager responsible for problem framing, launch-policy tradeoffs, requirements, workflows, fictional sample-data design, acceptance criteria, and the evaluation plan. AI tools assisted with implementation and verification; this does not claim that I manually wrote the application code, managed an engineering team, or shipped a Northstar product.
 
-AI tools assisted with implementation and verification. This is not a claim that I manually wrote the application code, managed an engineering team, or shipped a Northstar product.
+## PM review route
 
-## Review my product management work
-
-Start with the [PRD and acceptance examples](docs/product/PRD.md), then examine [alternatives and tradeoffs](docs/product/Product%20Decisions.md). The [discovery plan](docs/product/Discovery%20Plan.md), [validation protocol](docs/product/Validation.md), and [product risks](docs/product/Product%20Risks.md) explain what would justify or stop the next investment. The [backlog](docs/product/Sprint_Backlog.md) separates implemented behavior from evidence-dependent proposals.
-
-This route makes problem framing, prioritization, requirements, and evaluation visible without reading application code. All research and commercial plans are proposed; AI tools assisted with implementation and verification of the sample.
+Review the [decision brief](docs/product/Case_Study.md#decision-brief), then the [seeded walkthrough](docs/product/Sample%20Walkthrough.md), [PRD](docs/product/PRD.md), and [measurement plan](docs/product/Measurement%20Plan.md). [Product decisions](docs/product/Product%20Decisions.md), [discovery](docs/product/Discovery%20Plan.md), and [validation](docs/product/Validation.md) show the alternatives, study method, and conditions for the next investment.
 
 ## Product decisions
 
@@ -40,6 +36,8 @@ All people, evidence, launch records, and outcomes are fictional. No control dep
 
 - [Product requirements — problem, users, decisions, workflow, acceptance criteria, and proposed measures](docs/product/PRD.md)
 - [Case study — product framing and portfolio narrative](docs/product/Case_Study.md)
+- [Sample walkthrough — inspect a seeded launch gate](docs/product/Sample%20Walkthrough.md)
+- [Measurement plan — proposed research and guardrails](docs/product/Measurement%20Plan.md)
 - [Control matrix](docs/product/Control_Matrix.md)
 - [Commercial hypotheses](docs/product/GTM_Strategy.md)
 - [Implemented / next / later](docs/product/Sprint_Backlog.md)
