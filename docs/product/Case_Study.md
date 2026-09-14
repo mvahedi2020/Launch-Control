@@ -6,17 +6,17 @@ Launch decisions often happen across status documents, chat threads, checklists,
 
 Launch Control turns those questions into enforced product states for Northstar, a fictional B2B SaaS company. A simulated launch stays locked until all dependencies are ready, every mandatory check has an owner and evidence, and a go decision is recorded. A timestamped timeline preserves the decision trail. After launch, a sample incident forces an explicit pause or rollback response.
 
+## Decision brief
+
+| Decision | Chosen compromise and cost | Evidence needed for the next investment |
+| --- | --- | --- |
+| Make readiness visible as a rule | Require every fictional dependency and mandatory check to clear before a simulated launch. This adds a deliberate review step and can feel more restrictive than a checklist. | Five formative participants can explain which gate blocks the sample and why. |
+| Treat evidence presence as a precondition, not proof | Require nonblank evidence text and an owner, without claiming the sample can verify truth or approval authority. This keeps provenance outside the prototype. | Participants understand the difference between a displayed record and verified evidence. |
+| Withdraw a prior Go when a gate regresses | Remove Go permission and require a fresh decision after a required change. This can require a repeat review, but preserves the decision boundary. | Participants understand why restoring a field does not silently restore approval. |
+
 ## My role as Product Manager
 
 I defined the product concept, launch policy, interaction requirements, information architecture, sample scenario, acceptance criteria, and validation plan. AI tools assisted with implementation and verification. This is a personal portfolio artifact, not a claim that I wrote the application code, managed an engineering team, or shipped a Northstar product.
-
-## Product choices
-
-- Make readiness a rule, not a decorative score.
-- Require ownership and evidence on mandatory checks.
-- Separate the recorded go/no-go decision from the launch action.
-- Use a timeline to make state changes and incident responses inspectable.
-- Keep every action simulated and device-local.
 
 ## Proposed measures
 
