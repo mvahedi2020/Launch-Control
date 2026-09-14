@@ -16,6 +16,14 @@ The positioning hypothesis is an inspectable readiness conversation: who owns th
 
 A later pilot could compare time and errors in reconstructing a decision with the team's existing method. Collect a baseline first; no time-saving percentage, demand, revenue, pricing, or adoption result is claimed.
 
+## Decision tests before a pilot
+
+| Decision maker | Decision to test | Evidence that permits the next step | Stop condition |
+| --- | --- | --- | --- |
+| Launch participant | Does the readiness rule improve the current review conversation? | The participant explains the seeded blocker, the evidence boundary, and the consequence of a regression without assistance. | The participant prefers the existing method because it gives the same decision context with less effort. |
+| Product operations or release sponsor | Is a bounded pilot worth funding? | A recurring review problem is documented, a current-method comparison baseline is defined, and a sponsor accepts an explicit data boundary. | There is no recurring problem, no accountable sponsor, or no acceptable data boundary. |
+| Product team | Should the sample accept real inputs or integrations? | Formative work establishes workflow comprehension and a specific provenance, permissions, retention, and recovery proposal exists. | The next request is only for dashboard breadth or an unscoped connection to operational systems. |
+
 ## Investment gates
 
 A real product would need evidence provenance, identity, permissions, retention, support ownership, and privacy/security review. Keep deployment, paging, and traffic control outside the scope until separately authorized. Stop the commercial path if users understand the sample but prefer their existing process or cannot identify a recurring problem worth funding.
