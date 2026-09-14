@@ -4,7 +4,7 @@ This walkthrough uses only the fictional Northstar Analytics 2.4 plan. It demons
 
 ## Read the initial blocker
 
-Open **Command**. The seeded plan shows **Support enablement** as **Watching** with the note “Final brief pending.” Because that dependency is not Ready, **Support runbook rehearsed** remains locked. The launch control is disabled even though the other required checks show completed sample records.
+Choose **Reset sample** first to replace any browser-local state with the fictional fixtures; this reset happens immediately. Open **Command**. The seeded plan shows **Support enablement** as **Watching** with the note “Final brief pending.” Because that dependency is not Ready, **Support runbook rehearsed** remains locked. The launch control is disabled even though the other required checks show completed sample records.
 
 The sample makes a policy distinction: a readiness percentage or a completed-looking checklist does not itself permit launch. A required dependency must have an owner and be Ready; the related mandatory check must then have an owner, completion, and nonblank evidence. The displayed evidence is a review input, not proof that an underlying event occurred.
 
@@ -16,7 +16,7 @@ Select **Go**, add a rationale such as “All required sample evidence reviewed,
 
 ## Test the boundary and response
 
-After recording Go, clear the existing **Regression suite reviewed evidence** field. The sample withdraws Go, disables simulated launch, and adds a withdrawal event to the timeline. Re-entering evidence clears that blocker, but a fresh Go decision is still required. This prevents an earlier approval from silently surviving a changed prerequisite.
+After recording Go, clear the existing **Regression suite reviewed evidence** field. The sample withdraws Go, disables simulated launch, and adds a withdrawal event to the timeline. Re-enter the original **Sample QA report #184** evidence, select **Go**, enter a new rationale, and choose **Record decision**. Re-entering evidence clears the blocker, but only this fresh decision restores launch permission. This prevents an earlier approval from silently surviving a changed prerequisite.
 
 Once every required gate is clear and a current Go exists, choose **Simulate launch**. Then run the **sample post-launch issue** and select either **Pause rollout** or **Roll back release**. The resulting timeline and exported JSON remain local to the browser.
 
