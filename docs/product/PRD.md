@@ -64,6 +64,12 @@ As a launch lead, I can verify owners, dependencies, checks, and evidence before
 
 Rationale and evidence are review inputs, not independently verified proof. Authenticity, approval permissions, and production policy enforcement remain outside this sample.
 
+## Enforced behavior versus review judgment
+
+The sample enforces the sequence of required inputs: owner and Ready state for dependencies; unlocked, completed mandatory checks with nonblank evidence; a recorded Go before simulated launch; and withdrawal of Go after a required regression. It also requires an explicit pause or rollback after the sample issue.
+
+The sample does not enforce whether evidence is true, whether a person has authority to approve, whether the release should proceed in production, or which incident response is operationally correct. For example, “Sample rehearsal notes” satisfies the presence requirement for the fictional check, but it is not validated proof. That distinction is part of the product contract, not a claim that the displayed text is trustworthy.
+
 ## Explicit non-goals
 
 Deployment orchestration, paging, traffic control, source-control integration, authentication, production incident management, notifications, approval permissions, and real launch data are outside this sample. A simulated launch must never be presented as a software deployment.
