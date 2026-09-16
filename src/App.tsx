@@ -67,13 +67,8 @@ export default function App() {
     const at = now()
     if ('complete' in patch && patch.complete !== item.complete) return revokeGoIfBlocked(appendEvent(next, { id: `check-${Date.now()}`, at, title: patch.complete ? 'Readiness check completed' : 'Readiness check reopened', detail: item.name, kind: patch.complete ? 'success' : 'warning' }), at)
     if ('ownerId' in patch && patch.ownerId !== item.ownerId) return revokeGoIfBlocked(appendEvent(next, { id: `check-owner-${Date.now()}`, at, title: 'Check owner updated', detail: `${item.name} assigned to ${ownerName(current, patch.ownerId ?? '')}.`, kind: patch.ownerId ? 'info' : 'warning' }), at)
-    if ('evidence' in patch && patch.evidence !== item.evidence) return revokeGoIfBlocked(appendEvent(next, { id: `check-evidence-${Date.now()}`, at, title: 'Readiness evidence updated', detail: item.name, kind: patch.evidence?.trim() ? 'info' : 'warning' }), at)
+    if ('evidence' in patch && patch.evidence !== item.evidence) return revokeGoIfBlocked(next, at)
     return next
-  })
-  const recordEvidence = (id: string) => setPlan((current) => {
-    const item = current.checks.find((check) => check.id === id)
-    if (!item?.evidence.trim()) return current
-    return appendEvent(current, { id: `evidence-${Date.now()}`, at: now(), title: 'Readiness evidence recorded', detail: `${item.name}: ${item.evidence.trim()}`, kind: 'info' })
   })
   const exportSummary = () => {
     const payload = { product: 'Launch Control sample', exportedAt: new Date().toISOString(), readiness: readiness(plan), launch: plan }
@@ -127,7 +122,7 @@ export default function App() {
           <div className="gate-card">{plan.checks.map((check) => { const unlocked = checkUnlocked(plan, check.id); const waitingOn = check.dependencyIds.map((id) => plan.dependencies.find((item) => item.id === id)).filter((item) => item && (item.state !== 'ready' || !item.ownerId)).map((item) => item!.name); return <article className={`check-row ${check.complete ? 'complete' : ''} ${unlocked ? '' : 'locked'}`} key={check.id}>
             <label className="check-control"><input type="checkbox" checked={check.complete} disabled={!unlocked} onChange={(event) => updateCheck(check.id, { complete: event.target.checked })} /><span><Check size={15} /></span><div><b>{check.name}</b><small>{unlocked ? `${check.mandatory ? 'Required gate' : 'Optional check'} · ${ownerName(plan, check.ownerId)}` : `Waiting on ${waitingOn.join(', ')}`}</small></div></label>
             <select disabled={!unlocked} aria-label={`${check.name} owner`} value={check.ownerId} onChange={(event) => updateCheck(check.id, { ownerId: event.target.value })}><option value="">Unassigned</option>{plan.owners.map((owner) => <option key={owner.id} value={owner.id}>{owner.name}</option>)}</select>
-            <input disabled={!unlocked} className="evidence" aria-label={`${check.name} evidence`} value={check.evidence} placeholder={unlocked ? 'Add evidence or reference' : 'Resolve dependency first'} onChange={(event) => updateCheck(check.id, { evidence: event.target.value })} onBlur={() => recordEvidence(check.id)} />
+            <input disabled={!unlocked} className="evidence" aria-label={`${check.name} evidence`} value={check.evidence} placeholder={unlocked ? 'Add sample evidence or reference' : 'Resolve dependency first'} onChange={(event) => updateCheck(check.id, { evidence: event.target.value })} />
           </article>})}</div>
         </section>
 
