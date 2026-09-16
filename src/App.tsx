@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ArrowUpRight, Check, ChevronRight, CircleCheck, Clock3, Download, RotateCcw, ShieldCheck, Zap } from 'lucide-react'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, canLaunch, checkUnlocked, ownerName, readiness, revokeGoIfBlocked } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, checkUnlocked, ownerName, readiness, revokeGoIfBlocked } from './logic'
 import type { GateState, LaunchPlan, Phase } from './types'
 
 const STORAGE_KEY = 'northstar.launch-control.session.v1'
 type View = 'command' | 'timeline' | 'about'
 const now = () => new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }).format(new Date())
 const viewFromHash = (): View => location.hash === '#timeline' ? 'timeline' : location.hash === '#about' ? 'about' : 'command'
+const evidenceSnapshots = (plan: LaunchPlan) => Object.fromEntries(plan.checks.map((check) => [check.id, check.evidence.trim()]))
 
 function readSaved(): { plan: LaunchPlan; warning: string } {
   try {
@@ -28,6 +29,7 @@ export default function App() {
   const [view, setView] = useState<View>(viewFromHash)
   const [decisionChoice, setDecisionChoice] = useState<'go' | 'no-go' | ''>('')
   const [decisionNote, setDecisionNote] = useState('')
+  const evidenceSnapshotRef = useRef(evidenceSnapshots(initial.plan))
   const status = readiness(plan)
 
   useEffect(() => {
@@ -50,6 +52,7 @@ export default function App() {
 
   const reset = () => {
     setPlan(clonePlan(samplePlan)); setDecisionChoice(''); setDecisionNote('')
+    evidenceSnapshotRef.current = evidenceSnapshots(samplePlan)
     try { localStorage.removeItem(STORAGE_KEY); setWarning('') } catch { setWarning('Browser storage is unavailable. The sample launch is restored for this tab.') }
   }
   const updateDependency = (id: string, field: 'ownerId' | 'state', value: string) => setPlan((current) => {
@@ -70,6 +73,14 @@ export default function App() {
     if ('evidence' in patch && patch.evidence !== item.evidence) return revokeGoIfBlocked(next, at)
     return next
   })
+  const recordEvidence = (id: string, value: string) => {
+    const evidence = value.trim()
+    const previous = evidenceSnapshotRef.current[id] ?? ''
+    if (previous === evidence) return
+    evidenceSnapshotRef.current[id] = evidence
+    const at = now()
+    setPlan((current) => appendEvidenceSnapshot(current, id, previous, evidence, at))
+  }
   const exportSummary = () => {
     const payload = { product: 'Launch Control sample', exportedAt: new Date().toISOString(), readiness: readiness(plan), launch: plan }
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))
@@ -122,7 +133,7 @@ export default function App() {
           <div className="gate-card">{plan.checks.map((check) => { const unlocked = checkUnlocked(plan, check.id); const waitingOn = check.dependencyIds.map((id) => plan.dependencies.find((item) => item.id === id)).filter((item) => item && (item.state !== 'ready' || !item.ownerId)).map((item) => item!.name); return <article className={`check-row ${check.complete ? 'complete' : ''} ${unlocked ? '' : 'locked'}`} key={check.id}>
             <label className="check-control"><input type="checkbox" checked={check.complete} disabled={!unlocked} onChange={(event) => updateCheck(check.id, { complete: event.target.checked })} /><span><Check size={15} /></span><div><b>{check.name}</b><small>{unlocked ? `${check.mandatory ? 'Required gate' : 'Optional check'} · ${ownerName(plan, check.ownerId)}` : `Waiting on ${waitingOn.join(', ')}`}</small></div></label>
             <select disabled={!unlocked} aria-label={`${check.name} owner`} value={check.ownerId} onChange={(event) => updateCheck(check.id, { ownerId: event.target.value })}><option value="">Unassigned</option>{plan.owners.map((owner) => <option key={owner.id} value={owner.id}>{owner.name}</option>)}</select>
-            <input disabled={!unlocked} className="evidence" aria-label={`${check.name} evidence`} value={check.evidence} placeholder={unlocked ? 'Add sample evidence or reference' : 'Resolve dependency first'} onChange={(event) => updateCheck(check.id, { evidence: event.target.value })} />
+            <input disabled={!unlocked} className="evidence" aria-label={`${check.name} evidence`} value={check.evidence} placeholder={unlocked ? 'Add sample evidence or reference' : 'Resolve dependency first'} onChange={(event) => updateCheck(check.id, { evidence: event.target.value })} onBlur={(event) => recordEvidence(check.id, event.currentTarget.value)} />
           </article>})}</div>
         </section>
 

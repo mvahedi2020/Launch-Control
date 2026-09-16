@@ -41,6 +41,20 @@ export function appendEvent(plan: LaunchPlan, event: TimelineEvent): LaunchPlan 
   return { ...plan, timeline: [...plan.timeline, event] }
 }
 
+export function appendEvidenceSnapshot(plan: LaunchPlan, checkId: string, previousValue: string, nextValue: string, at: string): LaunchPlan {
+  const check = plan.checks.find((item) => item.id === checkId)
+  const previous = previousValue.trim()
+  const evidence = nextValue.trim()
+  if (!check || previous === evidence) return plan
+  return appendEvent(plan, {
+    id: `evidence-${checkId}-${Date.now()}`,
+    at,
+    title: 'Readiness evidence recorded',
+    detail: evidence ? `${check.name}: ${evidence}` : `${check.name}: evidence cleared`,
+    kind: evidence ? 'info' : 'warning',
+  })
+}
+
 export function ownerName(plan: LaunchPlan, ownerId: string): string {
   return plan.owners.find((owner) => owner.id === ownerId)?.name ?? 'Unassigned'
 }

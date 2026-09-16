@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, canLaunch, checkUnlocked, readiness, revokeGoIfBlocked } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, checkUnlocked, readiness, revokeGoIfBlocked } from './logic'
 
 describe('launch gate policy', () => {
   it('blocks launch on unresolved dependencies and mandatory checks', () => {
@@ -44,6 +44,25 @@ describe('launch gate policy', () => {
     const revoked = revokeGoIfBlocked(plan, 'later')
     expect(revoked.decision).toBeNull()
     expect(revoked.timeline.at(-1)?.detail).toContain('required gate changed')
+  })
+
+  it('records one evidence snapshot per completed edit and never restores a withdrawn go', () => {
+    const plan = clonePlan(samplePlan)
+    plan.dependencies[1].state = 'ready'
+    plan.checks[2].complete = true
+    plan.checks[2].evidence = 'Sample rehearsal notes'
+    plan.decision = { value: 'go', note: 'All gates reviewed', recordedAt: 'now' }
+
+    plan.checks[0].evidence = ''
+    const withdrawn = revokeGoIfBlocked(plan, 'withdrawn')
+    const restored = { ...withdrawn, checks: withdrawn.checks.map((check) => check.id === 'qa' ? { ...check, evidence: 'Sample QA report #184' } : check) }
+    const firstSnapshot = appendEvidenceSnapshot(restored, 'qa', '', 'Sample QA report #184', 'restored')
+    const unchangedBlur = appendEvidenceSnapshot(firstSnapshot, 'qa', 'Sample QA report #184', 'Sample QA report #184', 'unchanged')
+
+    expect(withdrawn.decision).toBeNull()
+    expect(firstSnapshot.timeline).toHaveLength(withdrawn.timeline.length + 1)
+    expect(unchangedBlur.timeline).toHaveLength(firstSnapshot.timeline.length)
+    expect(canLaunch(restored)).toBe(false)
   })
 
   it('appends timeline evidence without mutating the original', () => {

@@ -25,7 +25,7 @@ The product follows four principles:
 1. **Readiness is a rule, not a score.** Required gates cannot be bypassed by an aggregate percentage.
 2. **A decision needs evidence.** Mandatory checks need an owner, completion, and nonblank evidence; Go also needs a rationale.
 3. **A cleared gate can regress.** Removing required evidence or changing a required dependency withdraws Go permission and requires a new decision.
-4. **State changes must be inspectable.** The local timeline shows the decision, simulated launch, and required sample-incident response.
+4. **State changes must be inspectable.** The local timeline shows decisions, changed-evidence snapshots, the simulated launch, and the required sample-incident response; unchanged field focus does not create a record.
 
 ## Core user story
 
@@ -44,7 +44,7 @@ As a launch lead, I can verify owners, dependencies, checks, and evidence before
 | Requirement | Acceptance criterion |
 | --- | --- |
 | Model ownership and prerequisites | Every dependency has an owner and readiness state. A check whose dependencies lack an owner or Ready state remains locked and explains why. |
-| Require evidence for mandatory work | A required check passes only when it is unlocked, has an owner, is complete, and contains nonblank evidence. Optional checks do not change the launch rule. |
+| Require evidence for mandatory work | A required check passes only when it is unlocked, has an owner, is complete, and contains nonblank evidence. Readiness changes immediately while one snapshot is recorded when a changed evidence edit is completed; optional checks do not change the launch rule. |
 | Enforce the decision rule | Go or No-go can be recorded with a timestamp and rationale. Simulate launch is enabled only in pre-launch when every required gate clears and the current decision is Go. |
 | Handle regression honestly | If a required dependency or evidence regresses after Go, the Go decision is withdrawn, the timeline records that withdrawal, and a new Go decision is required after the blocker clears. |
 | Make the response trail inspectable | Simulated launch and subsequent state changes appear in a local timestamped timeline. A sample post-launch issue requires either Pause rollout or Roll back release before it is resolved. |

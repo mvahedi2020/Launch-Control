@@ -68,3 +68,18 @@ test('requires a new go after required evidence is restored', async ({ page }) =
   await page.getByRole('button', { name: 'Record decision' }).click()
   await expect(page.getByRole('button', { name: 'Simulate launch' })).toBeEnabled()
 })
+
+test('records one local evidence snapshot for a completed edit', async ({ page }) => {
+  const evidence = page.getByLabel('Support runbook rehearsed evidence')
+  await page.getByLabel('Support enablement state').selectOption('ready')
+  await evidence.fill('Sample rehearsal notes')
+  await evidence.press('Tab')
+  await page.getByRole('link', { name: 'Timeline', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Readiness evidence recorded' })).toHaveCount(1)
+
+  await page.getByRole('link', { name: 'Command', exact: true }).click()
+  await evidence.focus()
+  await evidence.press('Tab')
+  await page.getByRole('link', { name: 'Timeline', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Readiness evidence recorded' })).toHaveCount(1)
+})
