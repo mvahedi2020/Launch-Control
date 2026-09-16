@@ -51,3 +51,20 @@ test('withdraws a recorded go if required evidence is removed', async ({ page })
   await page.getByRole('link', { name: 'Timeline', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Go decision withdrawn' })).toBeVisible()
 })
+
+test('requires a new go after required evidence is restored', async ({ page }) => {
+  await page.getByLabel('Support enablement state').selectOption('ready')
+  await page.getByLabel('Support runbook rehearsed evidence').fill('Sample rehearsal notes')
+  await page.getByText('Support runbook rehearsed', { exact: true }).click()
+  await page.getByLabel('Launch decision').getByText('Go', { exact: true }).click()
+  await page.getByLabel('Decision rationale').fill('All required sample evidence reviewed.')
+  await page.getByRole('button', { name: 'Record decision' }).click()
+
+  await page.getByLabel('Regression suite reviewed evidence').fill('')
+  await page.getByLabel('Regression suite reviewed evidence').fill('Sample QA report #184')
+  await expect(page.getByRole('button', { name: 'Simulate launch' })).toBeDisabled()
+
+  await page.getByLabel('Launch decision').getByText('Go', { exact: true }).click()
+  await page.getByRole('button', { name: 'Record decision' }).click()
+  await expect(page.getByRole('button', { name: 'Simulate launch' })).toBeEnabled()
+})
