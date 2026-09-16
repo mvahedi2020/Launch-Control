@@ -16,6 +16,10 @@ The positioning hypothesis is an inspectable readiness conversation: who owns th
 
 A later pilot could compare time and errors in reconstructing a decision with the team's existing method. Collect a baseline first; no time-saving percentage, demand, revenue, pricing, or adoption result is claimed.
 
+## Pilot operating decision
+
+Before a bounded pilot, the sponsor must name the recurring review, participants and review time it will consume, the current-method comparison, and a data owner. The cost under consideration is the effort to run that comparison, not a price or ROI claim. Exit if the sponsor cannot name a recurring decision, the existing method gives participants the same or better context, or a minimal data boundary and retention path cannot be agreed.
+
 ## Decision tests before a pilot
 
 | Decision maker | Decision to test | Evidence that permits the next step | Stop condition |
