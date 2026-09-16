@@ -10,7 +10,7 @@ Recruit five consenting product operations or release leads who coordinate cross
 
 Start with a neutral task: “Describe whether this launch can proceed and the information you used.” Next ask the participant to prepare the missing sample information, record a decision, and explain what would happen if required evidence changed. Finally, show the sample incident and ask them to choose and explain a response. Do not introduce the interface as safer or more accountable before hearing their interpretation.
 
-Ask the first half of participants to describe their current checklist, tracker, or meeting process before the sample and the second half afterward. This counterbalances an early description from anchoring the fictional workflow. Do not collect confidential launch artifacts. Participation and permission to record are separate choices, and notes should retain only the evidence needed for the stated study.
+Assign two participants to describe their current checklist, tracker, or meeting process before the sample and three afterward. Record that order beside each session and use it only as a qualitative counterbalance, not an estimate of an order effect. Do not collect confidential launch artifacts. Participation and permission to record are separate choices, and notes should retain only the evidence needed for the stated study.
 
 ## Evidence that could change the direction
 
