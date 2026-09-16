@@ -16,6 +16,12 @@ Conduct five moderated sessions with product operations or release leads. Ask ea
 
 Measure unassisted completion, time to identify blockers, incorrect launch attempts, response-decision completion, and confidence on a five-point scale. The five sessions are formative: use them to identify failures before setting a percentage threshold. A later 20-participant study can test the proposed 85% unassisted completion target (17/20), while the formative work can assess whether blocker diagnosis is understandable within 90 seconds.
 
+## Moderator answer key for the seeded task
+
+The initial blocker is **Support enablement** in **Watching** state; the related **Support runbook rehearsed** check is locked until that named dependency is Ready and owned. A participant must then supply sample evidence, complete the required check, record a Go rationale, and choose **Simulate launch**. A nonblank value satisfies the fictional presence rule only; it does not verify the evidence. Clearing **Regression suite reviewed** evidence after Go must immediately withdraw Go. Restoring “Sample QA report #184” clears the blocker but cannot restore launch permission until the participant records a fresh Go. After simulated launch, either recorded sample response—Pause rollout or Roll back release—completes the incident task.
+
+Do not score a preferred response or a high readiness percentage as correct by itself. Score whether the participant names the missing prerequisite or evidence, connects it to the disabled action, explains the evidence boundary, and follows the withdrawal-and-reapproval contract.
+
 ## Known limits
 
 The scenario, evidence, and people are fictional. Local timestamps and browser persistence do not represent production audit controls. The demo has not established usability, demand, reliability, or business impact.
@@ -24,8 +30,8 @@ The scenario, evidence, and people are fictional. Local timestamps and browser p
 
 Use the same seeded scenario for every participant and record whether help was needed before a task finished. A blocker explanation passes when it identifies the missing dependency or required evidence and connects that condition to the disabled launch action; repeating the percentage alone is insufficient. Gated-flow completion passes only when the participant supplies the sample information, records a reasoned decision, and simulates launch without moderator instructions.
 
-In the later 20-person study, retain all 20 in each blocker-explanation and completion denominator, including abandoned and assisted attempts. Report 18/20 and 17/20 as proposed thresholds, not population estimates. Score incident response separately as recorded pause or rollback decisions divided by all started incident scenarios; retain abandoned scenarios in that denominator.
+Use the consent-aware units and denominators in [Measurement Plan.md](Measurement%20Plan.md) for the later 20-person study. Retain assisted and abandoned attempts, report 18/20 and 17/20 as proposed thresholds rather than population estimates, and score incident response separately among participants who start that task.
 
 Record whether the participant understands that evidence text is not verified and no real software is deployed. A correct click sequence with either misconception should trigger design review even if completion targets are met. The initial five sessions identify problems and refine these tasks; they are not the later quantitative study. No sessions have been conducted.
 
-For the five formative sessions, retain every started task in the study notes, including abandonment, assistance, and a participant who chooses No-go. Stop expansion and return to the gate explanation if participants repeatedly treat evidence presence as truth, mistake simulated launch for deployment, or cannot explain why a required regression withdraws Go. Do not add templates, integrations, or real-data intake before that boundary is understood.
+For the five formative sessions, retain every started task in the study notes, including abandonment, assistance, and a participant who chooses No-go, subject to the consent-withdrawal rule in [Measurement Plan.md](Measurement%20Plan.md). Stop expansion and return to the gate explanation if participants repeatedly treat evidence presence as truth, mistake simulated launch for deployment, or cannot explain why a required regression withdraws Go. Do not add templates, integrations, or real-data intake before that boundary is understood.

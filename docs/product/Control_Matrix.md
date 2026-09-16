@@ -8,7 +8,7 @@ Every person, dependency, evidence record, event, and release response is fictio
 | Dependencies | Owner list | Assigns or removes the fictional owner for a dependency | Missing owners block related required work |
 | Dependencies | State list | Marks a dependency Ready, Watching, or Blocked | A non-ready state locks related checks and launch permission |
 | Checks | Readiness checkbox | Marks an unlocked check complete or reopens it | Locked checks remain unavailable until every dependency is Ready and owned |
-| Checks | Check owner and evidence fields | Updates readiness immediately; each changed field is captured once when its edit is completed on blur | Required checks need both completion and nonblank evidence; a present value is not verified proof |
+| Checks | Check owner and evidence fields | Owner changes update the fictional check immediately; each changed evidence-text edit is captured once when completed on blur | Required checks need both completion and nonblank evidence; a present value is not verified proof |
 | Decision | Go choice | Available only when every required gate is clear | It is disabled with an explanation while a blocker remains |
 | Decision | No-go choice and rationale | Allows a hold decision with a nonblank reason | It does not permit simulated launch |
 | Decision | Record decision | Adds a timestamped local event | A recorded Go is withdrawn if a required dependency or check later regresses; resolving it requires a new Go record |
