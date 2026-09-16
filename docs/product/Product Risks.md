@@ -11,4 +11,4 @@ This is a prospective product-risk register for a fictional sample, not a report
 | A local timeline is treated as a compliance audit log | A participant assumes identity verification or tamper resistance. | State that browser storage is an inspection aid. Shared audit controls require a separately designed identity and retention policy. |
 | The two response options oversimplify incident management | A reviewer assumes every incident should pause or roll back. | Bound the exercise to its fictional scenario. Do not use it as an operational incident procedure. |
 
-After formative sessions, choose one repeated misunderstanding to address before expanding scope. Risk reduction in a prototype is not proof of production reliability or compliance.
+After formative sessions, prioritize any misunderstanding of evidence presence, simulation, or withdrawn approval before navigation, reporting, or template refinement. The product owner should record the corrective hypothesis, retest owner, and pass condition before the next scope decision. Risk reduction in a prototype is not proof of production reliability or compliance.

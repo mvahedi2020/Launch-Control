@@ -8,7 +8,7 @@ Editable dependency owners and states; prerequisite-locked checks; mandatory evi
 
 | Priority | Candidate work | Evidence required | Dependency or tradeoff |
 |---|---|---|---|
-| 1 | Test blocker and evidence comprehension | Five formative sessions identify where explanations fail. | Improve the existing decision before adding more configuration. |
+| 1 | Test blocker and evidence comprehension | Five formative sessions identify where explanations fail; each repeated misunderstanding has a documented corrective hypothesis, retest owner, and pass condition. | The product owner assigns the correction and the study facilitator verifies the retest before more configuration is considered. |
 | 2 | Test keyboard and screen-reader review | Participants can locate the blocker, record the decision, and recover without relying on visual position. | Accessible task design and consenting participants precede conclusions. |
 | 3 | Explore a clearer decision handoff | Reviewers cannot reconstruct why Go changed using the current timeline and export. | Compare a printable summary with the existing export before building a new reporting feature. |
 | 4 | Explore named local templates | Repeated sample reviews show setup is a material barrier. | A template must expose its assumptions and cannot carry an approval into a new launch. |
@@ -17,4 +17,4 @@ Editable dependency owners and states; prerequisite-locked checks; mandatory evi
 
 Import formats, complex dependency visualization, shared approvals, notifications, deployment integrations, and incident operations remain uncommitted. They introduce policy and data responsibilities that the local sample does not model. Do not describe dependency support itself as missing: the current checks already depend on named prerequisites; richer visualization would be an extension.
 
-The next investment is chosen from research evidence, not a promise to complete this list. No sprint dates, capacity estimate, assigned team, or shipped customer outcome is implied.
+The next investment is chosen from research evidence, not a promise to complete this list. A repeated misunderstanding of evidence presence, simulated action, or withdrawn Go blocks lower-priority expansion until the assigned retest meets its pass condition. No sprint dates, capacity estimate, assigned team, or shipped customer outcome is implied.
