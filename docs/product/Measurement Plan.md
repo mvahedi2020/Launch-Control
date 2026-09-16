@@ -10,10 +10,12 @@ Leading indicators are repeated confusion that a readiness percentage grants per
 
 | Question | Canonical measure and denominator | Proposed threshold | Guardrail |
 | --- | --- | --- | --- |
-| Can a reviewer explain why launch is blocked? | Correct blocker explanations / all 20 enrolled participants | 18/20 | The explanation names a missing prerequisite or required evidence and connects it to disabled launch; repeating a percentage alone does not pass. |
-| Can a reviewer complete the gated flow? | Unassisted completion from initial blockers through simulated launch / all 20 enrolled participants | 17/20 | Assisted and abandoned attempts remain in the denominator and are reported separately. |
-| Does every started sample issue end with a response? | Recorded Pause rollout or Roll back release choices / all started sample-incident scenarios | 100% | The two response paths model only a fictional scenario, not a production incident program. |
+| Can a reviewer explain why launch is blocked? | Correct blocker explanations / all 20 consented, started, non-withdrawn task records | 18/20 | The explanation names a missing prerequisite or required evidence and connects it to disabled launch; repeating a percentage alone does not pass. |
+| Can a reviewer complete the gated flow? | Unassisted completion from initial blockers through simulated launch / all 20 consented, started, non-withdrawn task records | 17/20 | Assisted and abandoned attempts remain in the denominator and are reported separately. |
+| Does every started sample issue end with a response? | Recorded Pause rollout or Roll back release choices / all participants who start the sample-incident task | 100% | Report issue-task starts separately from gated-flow completion; the two response paths model only a fictional scenario. |
 
-Use the same task order for the first half of participants and counterbalance whether they describe their current method before or after using the sample for the second half. Do not prime participants by calling the workspace safer, more accountable, or more reliable. A current-method comparison remains qualitative until a study defines a valid baseline.
+Use the same product tasks in the same order for every participant. Randomly assign 10 participants to describe their current method before the sample and 10 afterward; record the assignment but treat the comparison as qualitative until a study defines a valid baseline. Do not prime participants by calling the workspace safer, more accountable, or more reliable.
+
+Consent withdrawal is not an unsuccessful task. If a participant withdraws permission, delete their study material and report only the withdrawal count and study phase. Do not silently replace a withdrawn participant or exclude assisted or abandoned attempts. A 20-person threshold result requires 20 consented, started, non-withdrawn records under the same protocol; otherwise treat the run as formative and repeat a complete cohort before making a threshold decision.
 
 Stop expansion and return to the readiness explanation if participants treat text presence as truth, mistake simulated launch for a deployment, or cannot explain why a Go is withdrawn after a required regression. Do not propose templates, integrations, or real-data intake until those boundaries are understood.
