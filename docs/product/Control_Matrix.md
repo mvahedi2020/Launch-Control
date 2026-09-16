@@ -15,7 +15,7 @@ Every person, dependency, evidence record, event, and release response is fictio
 | Launch | Simulate launch | Runs only in pre-launch state with cleared required gates and a recorded Go | It changes only local sample state |
 | Incident | Run sample post-launch issue | Reveals a fictional SEV 2 response choice after launch | No real alert or customer effect occurs |
 | Incident | Pause rollout / Roll back release | Records the selected local response and ends the incident | The model intentionally includes only these two sample paths |
-| Timeline | Timeline page | Shows local timestamped decisions, evidence, and responses | It is a browser-local trail, not an audit system |
+| Timeline | Timeline page | Shows local timestamped decisions, Go withdrawals after a required regression, and simulated responses | Editing evidence text updates readiness immediately; the local trail is not an audit system |
 | Recovery | Reset sample | Restores the original fixtures and removes saved local state | No shared release system changes |
 | Export | Export summary | Downloads the fictional plan, readiness state, and timeline as JSON | It does not upload or notify anyone |
 | Persistence and accessibility | Browser storage, native controls, labels, focus outlines | Restores valid sample state; supports keyboard operation and responsive layout | Invalid or unavailable storage shows a warning and remains usable in the current tab |
