@@ -1,5 +1,28 @@
 import type { Decision, LaunchPlan, TimelineEvent } from './types'
 
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value)
+const isString = (value: unknown): value is string => typeof value === 'string'
+const isGateState = (value: unknown) => value === 'ready' || value === 'watching' || value === 'blocked'
+const isPhase = (value: unknown) => value === 'prelaunch' || value === 'launched' || value === 'paused' || value === 'rolledback'
+const isEventKind = (value: unknown) => value === 'info' || value === 'success' || value === 'warning' || value === 'critical'
+
+export function isLaunchPlan(value: unknown): value is LaunchPlan {
+  if (!isRecord(value) || !isString(value.name) || !isString(value.window) || !isPhase(value.phase) || !Array.isArray(value.owners) || !Array.isArray(value.dependencies) || !Array.isArray(value.checks) || !Array.isArray(value.timeline)) return false
+  if (!value.owners.every((owner) => isRecord(owner) && isString(owner.id) && isString(owner.name) && isString(owner.role) && isString(owner.initials))) return false
+  const ownerIds = new Set(value.owners.map((owner) => owner.id))
+  if (ownerIds.size !== value.owners.length) return false
+  const knownOwner = (id: unknown) => isString(id) && (!id || ownerIds.has(id))
+  if (!value.dependencies.every((dependency) => isRecord(dependency) && isString(dependency.id) && isString(dependency.name) && knownOwner(dependency.ownerId) && isGateState(dependency.state) && isString(dependency.note))) return false
+  const dependencyIds = new Set(value.dependencies.map((dependency) => dependency.id))
+  if (dependencyIds.size !== value.dependencies.length) return false
+  if (!value.checks.every((check) => isRecord(check) && isString(check.id) && isString(check.name) && knownOwner(check.ownerId) && typeof check.mandatory === 'boolean' && typeof check.complete === 'boolean' && isString(check.evidence) && Array.isArray(check.dependencyIds) && check.dependencyIds.every((id) => isString(id) && dependencyIds.has(id)))) return false
+  if (new Set(value.checks.map((check) => check.id)).size !== value.checks.length) return false
+  if (value.decision !== null && (!isRecord(value.decision) || (value.decision.value !== 'go' && value.decision.value !== 'no-go') || !isString(value.decision.note) || !isString(value.decision.recordedAt))) return false
+  if (!value.timeline.every((event) => isRecord(event) && isString(event.id) && isString(event.at) && isString(event.title) && isString(event.detail) && isEventKind(event.kind))) return false
+  if (value.incident !== null && (!isRecord(value.incident) || typeof value.incident.active !== 'boolean' || !isString(value.incident.openedAt) || (value.incident.decision !== undefined && value.incident.decision !== 'pause' && value.incident.decision !== 'rollback'))) return false
+  return true
+}
+
 export function checkUnlocked(plan: LaunchPlan, checkId: string): boolean {
   const check = plan.checks.find((item) => item.id === checkId)
   if (!check) return false

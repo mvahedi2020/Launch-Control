@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
 
 describe('launch gate policy', () => {
   it('blocks launch on unresolved dependencies and mandatory checks', () => {
@@ -93,5 +93,12 @@ describe('launch gate policy', () => {
     expect(openSampleIncident(incident, 'later', 'incident-2')).toBe(incident)
     const paused = resolveSampleIncident(incident, 'pause', 'later', 'pause-1')
     expect(resolveSampleIncident(paused, 'pause', 'later', 'pause-2')).toBe(paused)
+  })
+
+  it('accepts a complete launch plan and rejects malformed saved session data', () => {
+    expect(isLaunchPlan(samplePlan)).toBe(true)
+    expect(isLaunchPlan({ ...samplePlan, checks: [{ id: 'qa' }] })).toBe(false)
+    expect(isLaunchPlan({ ...samplePlan, dependencies: [{ ...samplePlan.dependencies[0], ownerId: 'unknown' }] })).toBe(false)
+    expect(isLaunchPlan({ ...samplePlan, timeline: [{ id: 'event', at: 'now', title: 'Broken', detail: 'Missing kind' }] })).toBe(false)
   })
 })

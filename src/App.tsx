@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ArrowUpRight, Check, ChevronRight, CircleCheck, Clock3, Download, RotateCcw, ShieldCheck, Zap } from 'lucide-react'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, openSampleIncident, ownerName, readiness, recordDecision as saveDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, openSampleIncident, ownerName, readiness, recordDecision as saveDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
 import type { GateState, LaunchPlan } from './types'
 
 const STORAGE_KEY = 'northstar.launch-control.session.v1'
@@ -15,7 +15,7 @@ function readSaved(): { plan: LaunchPlan; warning: string } {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return { plan: clonePlan(samplePlan), warning: '' }
     const parsed = JSON.parse(raw) as { version: number; plan: LaunchPlan }
-    if (parsed.version !== 1 || !Array.isArray(parsed.plan?.checks) || !parsed.plan.checks.every((check) => Array.isArray(check.dependencyIds)) || !Array.isArray(parsed.plan.dependencies) || !Array.isArray(parsed.plan.owners) || !Array.isArray(parsed.plan.timeline) || !['prelaunch', 'launched', 'paused', 'rolledback'].includes(parsed.plan.phase)) throw new Error('Unsupported saved data')
+    if (parsed.version !== 1 || !isLaunchPlan(parsed.plan)) throw new Error('Unsupported saved data')
     return { plan: parsed.plan, warning: '' }
   } catch {
     return { plan: clonePlan(samplePlan), warning: 'Saved launch data could not be read. This session is using the sample launch.' }
