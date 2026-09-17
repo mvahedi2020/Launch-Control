@@ -2,7 +2,7 @@
 
 ## Observed software checks — September 16, 2026
 
-On Node 24/macOS, lint, strict type checks, production build, eight policy tests, and six repository browser tests passed. `npm audit --omit=dev` reported no vulnerabilities. The policy and browser suites now cover the decision replay boundary: an unchanged recorded decision cannot create another timeline record, and repeated launch or incident actions cannot replay a completed local state transition.
+On Node 24/macOS, lint, strict type checks, production build, nine policy tests, and six repository browser tests passed. `npm audit --omit=dev` reported no vulnerabilities. The policy and browser suites now cover the decision replay boundary: an unchanged recorded decision cannot create another timeline record, and repeated launch or incident actions cannot replay a completed local state transition. Saved-session checks also reject partial, unknown-reference, and malformed timeline records before the command surface renders.
 
 ## Observed software checks — September 8, 2026
 
