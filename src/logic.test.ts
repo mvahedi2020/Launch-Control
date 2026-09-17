@@ -100,5 +100,13 @@ describe('launch gate policy', () => {
     expect(isLaunchPlan({ ...samplePlan, checks: [{ id: 'qa' }] })).toBe(false)
     expect(isLaunchPlan({ ...samplePlan, dependencies: [{ ...samplePlan.dependencies[0], ownerId: 'unknown' }] })).toBe(false)
     expect(isLaunchPlan({ ...samplePlan, timeline: [{ id: 'event', at: 'now', title: 'Broken', detail: 'Missing kind' }] })).toBe(false)
+    expect(isLaunchPlan({ ...samplePlan, incident: { active: true, openedAt: 'now' } })).toBe(false)
+    expect(isLaunchPlan({ ...samplePlan, phase: 'launched', incident: { active: false, openedAt: 'now', decision: 'pause' } })).toBe(false)
+    expect(isLaunchPlan({ ...samplePlan, timeline: [...samplePlan.timeline, { ...samplePlan.timeline[0] }] })).toBe(false)
+  })
+
+  it('only resolves an active incident from the launched phase', () => {
+    const invalid = { ...samplePlan, phase: 'paused' as const, incident: { active: true, openedAt: 'now' } }
+    expect(resolveSampleIncident(invalid, 'pause', 'later', 'pause-1')).toBe(invalid)
   })
 })

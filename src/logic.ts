@@ -19,8 +19,11 @@ export function isLaunchPlan(value: unknown): value is LaunchPlan {
   if (new Set(value.checks.map((check) => check.id)).size !== value.checks.length) return false
   if (value.decision !== null && (!isRecord(value.decision) || (value.decision.value !== 'go' && value.decision.value !== 'no-go') || !isString(value.decision.note) || !isString(value.decision.recordedAt))) return false
   if (!value.timeline.every((event) => isRecord(event) && isString(event.id) && isString(event.at) && isString(event.title) && isString(event.detail) && isEventKind(event.kind))) return false
+  if (new Set(value.timeline.map((event) => event.id)).size !== value.timeline.length) return false
   if (value.incident !== null && (!isRecord(value.incident) || typeof value.incident.active !== 'boolean' || !isString(value.incident.openedAt) || (value.incident.decision !== undefined && value.incident.decision !== 'pause' && value.incident.decision !== 'rollback'))) return false
-  return true
+  if (value.phase === 'prelaunch') return value.incident === null
+  if (value.phase === 'launched') return value.incident === null || (value.incident.active === true && value.incident.decision === undefined)
+  return Boolean(value.incident && !value.incident.active && value.incident.decision === (value.phase === 'paused' ? 'pause' : 'rollback'))
 }
 
 export function checkUnlocked(plan: LaunchPlan, checkId: string): boolean {
@@ -78,7 +81,7 @@ export function openSampleIncident(plan: LaunchPlan, at: string, id: string): La
 }
 
 export function resolveSampleIncident(plan: LaunchPlan, decision: 'pause' | 'rollback', at: string, id: string): LaunchPlan {
-  if (!plan.incident?.active) return plan
+  if (plan.phase !== 'launched' || !plan.incident?.active) return plan
   const phase = decision === 'pause' ? 'paused' : 'rolledback'
   return appendEvent(
     { ...plan, phase, incident: { ...plan.incident, active: false, decision } },
