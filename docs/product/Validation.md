@@ -1,5 +1,9 @@
 # Validation plan
 
+## Observed software checks — September 16, 2026
+
+On Node 24/macOS, lint, strict type checks, production build, eight policy tests, and six repository browser tests passed. `npm audit --omit=dev` reported no vulnerabilities. The policy and browser suites now cover the decision replay boundary: an unchanged recorded decision cannot create another timeline record, and repeated launch or incident actions cannot replay a completed local state transition.
+
 ## Observed software checks — September 8, 2026
 
 On Node 24/macOS: lint, strict type checks, three policy tests, production build and two repository browser tests passed. The additional headless Chrome walkthrough passed locked prerequisites, evidence, no-go blocking, go approval, reblocking after a gate changed, launch persistence, sample issue and rollback, timeline, JSON export, navigation/reset, mobile controls at 390 × 844 with no page overflow, and unavailable-storage fallback. No page errors were captured. npm audit reported zero vulnerabilities.
