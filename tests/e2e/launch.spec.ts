@@ -83,3 +83,13 @@ test('records one local evidence snapshot for a completed edit', async ({ page }
   await page.getByRole('link', { name: 'Timeline', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Readiness evidence recorded' })).toHaveCount(1)
 })
+
+test('does not duplicate an unchanged recorded decision', async ({ page }) => {
+  await page.getByLabel('Launch decision').getByText('No-go', { exact: true }).click()
+  await page.getByLabel('Decision rationale').fill('Need more sample review.')
+  const record = page.getByRole('button', { name: 'Record decision' })
+  await record.click()
+  await expect(record).toBeDisabled()
+  await page.getByRole('link', { name: 'Timeline', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'No-go decision recorded' })).toHaveCount(1)
+})
