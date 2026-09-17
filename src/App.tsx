@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ArrowUpRight, Check, ChevronRight, CircleCheck, Clock3, Download, RotateCcw, ShieldCheck, Zap } from 'lucide-react'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, checkUnlocked, ownerName, readiness, revokeGoIfBlocked } from './logic'
-import type { GateState, LaunchPlan, Phase } from './types'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, openSampleIncident, ownerName, readiness, recordDecision as saveDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
+import type { GateState, LaunchPlan } from './types'
 
 const STORAGE_KEY = 'northstar.launch-control.session.v1'
 type View = 'command' | 'timeline' | 'about'
@@ -88,23 +88,21 @@ export default function App() {
   }
 
   const recordDecision = () => {
-    if (!decisionChoice || decisionNote.trim().length < 4 || (decisionChoice === 'go' && status.blockers.length > 0)) return
+    if (!decisionChoice) return
     const recordedAt = now()
-    setPlan((current) => appendEvent({ ...current, decision: { value: decisionChoice, note: decisionNote.trim(), recordedAt } }, { id: `decision-${Date.now()}`, at: recordedAt, title: `${decisionChoice === 'go' ? 'Go' : 'No-go'} decision recorded`, detail: decisionNote.trim(), kind: decisionChoice === 'go' ? 'success' : 'warning' }))
+    setPlan((current) => saveDecision(current, decisionChoice, decisionNote, recordedAt, `decision-${Date.now()}`))
   }
   const launch = () => {
-    if (!canLaunch(plan)) return
     const at = now()
-    setPlan((current) => appendEvent({ ...current, phase: 'launched' }, { id: `launch-${Date.now()}`, at, title: 'Launch completed', detail: `${current.name} simulated launch completed.`, kind: 'success' }))
+    setPlan((current) => simulateLaunch(current, at, `launch-${Date.now()}`))
   }
   const openIncident = () => {
-    if (plan.phase !== 'launched' || plan.incident?.active) return
     const at = now()
-    setPlan((current) => appendEvent({ ...current, incident: { active: true, openedAt: at } }, { id: `incident-${Date.now()}`, at, title: 'Sample issue detected', detail: 'Export jobs are delayed for a sample customer segment.', kind: 'critical' }))
+    setPlan((current) => openSampleIncident(current, at, `incident-${Date.now()}`))
   }
   const decideIncident = (decision: 'pause' | 'rollback') => {
-    const at = now(); const phase: Phase = decision === 'pause' ? 'paused' : 'rolledback'
-    setPlan((current) => appendEvent({ ...current, phase, incident: current.incident ? { ...current.incident, active: false, decision } : null }, { id: `${decision}-${Date.now()}`, at, title: decision === 'pause' ? 'Rollout paused' : 'Release rolled back', detail: decision === 'pause' ? 'Further sample exposure is paused for investigation.' : 'Sample traffic returned to the prior release.', kind: 'warning' }))
+    const at = now()
+    setPlan((current) => resolveSampleIncident(current, decision, at, `${decision}-${Date.now()}`))
   }
 
   const phaseLabel = plan.phase === 'prelaunch' ? 'Pre-launch review' : plan.phase === 'launched' ? 'Launch complete' : plan.phase === 'paused' ? 'Rollout paused' : 'Rolled back'
@@ -141,7 +139,7 @@ export default function App() {
           <p className="eyebrow">03 · Decision</p><h2>Record the call</h2><p>A launch decision needs a clear choice and rationale. Any later gate change is still enforced.</p>
           <div className="decision-options" role="radiogroup" aria-label="Launch decision"><label className={`${decisionChoice === 'go' ? 'selected' : ''} ${status.blockers.length ? 'locked-choice' : ''}`}><input type="radio" name="decision" value="go" checked={decisionChoice === 'go'} disabled={status.blockers.length > 0} onChange={() => setDecisionChoice('go')} /><CircleCheck size={20} /><span><b>Go</b><small>{status.blockers.length ? 'Clear every required gate first' : 'Proceed when all gates clear'}</small></span></label><label className={decisionChoice === 'no-go' ? 'selected no-go' : ''}><input type="radio" name="decision" value="no-go" checked={decisionChoice === 'no-go'} onChange={() => setDecisionChoice('no-go')} /><AlertTriangle size={20} /><span><b>No-go</b><small>Hold this launch window</small></span></label></div>
           <label className="rationale"><span>Decision rationale</span><textarea aria-label="Decision rationale" value={decisionNote} onChange={(event) => setDecisionNote(event.target.value)} placeholder="What supports this decision?" rows={3} /></label>
-          <button className="button secondary full" onClick={recordDecision} disabled={!decisionChoice || decisionNote.trim().length < 4}>Record decision</button>
+          <button className="button secondary full" onClick={recordDecision} disabled={!decisionChoice || !canRecordDecision(plan, decisionChoice, decisionNote)}>Record decision</button>
           {plan.decision && <div className={`recorded ${plan.decision.value}`}><ShieldCheck size={18} /><div><b>{plan.decision.value === 'go' ? 'Go recorded' : 'No-go recorded'}</b><small>{plan.decision.recordedAt}</small></div></div>}
           <div className="launch-rule"><p>{status.blockers.length ? `${status.blockers[0]}. Any recorded Go is withdrawn until this is resolved.` : plan.decision?.value !== 'go' ? 'Record a go decision to unlock launch.' : 'Required gates and decision are ready.'}</p><button className="button primary full" onClick={launch} disabled={!canLaunch(plan)}><Zap size={17} />Simulate launch</button></div>
           {plan.phase === 'launched' && !plan.incident?.active && <button className="incident-trigger" onClick={openIncident}><AlertTriangle size={16} />Run sample post-launch issue</button>}

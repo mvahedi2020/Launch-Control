@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, checkUnlocked, readiness, revokeGoIfBlocked } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
 
 describe('launch gate policy', () => {
   it('blocks launch on unresolved dependencies and mandatory checks', () => {
@@ -69,5 +69,29 @@ describe('launch gate policy', () => {
     const next = appendEvent(samplePlan, { id: 'test', at: 'now', title: 'Test', detail: 'Recorded', kind: 'info' })
     expect(next.timeline).toHaveLength(samplePlan.timeline.length + 1)
     expect(samplePlan.timeline).toHaveLength(2)
+  })
+
+  it('records a changed pre-launch decision once and rejects a duplicate or post-launch decision', () => {
+    const plan = clonePlan(samplePlan)
+    const recorded = recordDecision(plan, 'no-go', 'Need more review', 'now', 'decision-1')
+    expect(recorded.decision).toEqual({ value: 'no-go', note: 'Need more review', recordedAt: 'now' })
+    expect(canRecordDecision(recorded, 'no-go', 'Need more review')).toBe(false)
+    expect(recordDecision(recorded, 'no-go', 'Need more review', 'later', 'decision-2')).toBe(recorded)
+    expect(recordDecision({ ...recorded, phase: 'launched' }, 'go', 'Reconsidered', 'later', 'decision-3')).toEqual({ ...recorded, phase: 'launched' })
+  })
+
+  it('makes launch and incident transitions idempotent', () => {
+    const plan = clonePlan(samplePlan)
+    plan.dependencies[1].state = 'ready'
+    plan.checks[2].complete = true
+    plan.checks[2].evidence = 'Sample rehearsal notes'
+    plan.decision = { value: 'go', note: 'All gates reviewed', recordedAt: 'now' }
+
+    const launched = simulateLaunch(plan, 'later', 'launch-1')
+    expect(simulateLaunch(launched, 'later', 'launch-2')).toBe(launched)
+    const incident = openSampleIncident(launched, 'later', 'incident-1')
+    expect(openSampleIncident(incident, 'later', 'incident-2')).toBe(incident)
+    const paused = resolveSampleIncident(incident, 'pause', 'later', 'pause-1')
+    expect(resolveSampleIncident(paused, 'pause', 'later', 'pause-2')).toBe(paused)
   })
 })
