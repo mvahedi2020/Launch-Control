@@ -45,7 +45,7 @@ As a launch lead, I can verify owners, dependencies, checks, and evidence before
 | --- | --- |
 | Model ownership and prerequisites | Every dependency has an owner and readiness state. A check whose dependencies lack an owner or Ready state remains locked and explains why. |
 | Require evidence for mandatory work | A required check passes only when it is unlocked, has an owner, is complete, and contains nonblank evidence. Readiness changes immediately while one snapshot is recorded when a changed evidence edit is completed; optional checks do not change the launch rule. |
-| Enforce the decision rule | Go or No-go can be recorded with a timestamp and rationale. Simulate launch is enabled only in pre-launch when every required gate clears and the current decision is Go. |
+| Enforce the decision rule | Go or No-go can be recorded with a timestamp and rationale. Simulate launch is enabled only in pre-launch when every required gate clears and the current decision is Go; prerequisite controls become read-only once the simulated launch phase begins. |
 | Handle regression honestly | If a required dependency or evidence regresses after Go, the Go decision is withdrawn, the timeline records that withdrawal, and a new Go decision is required after the blocker clears. |
 | Make the response trail inspectable | Simulated launch and subsequent state changes appear in a local timestamped timeline. A sample post-launch issue requires either Pause rollout or Roll back release before it is resolved. |
 | Support recovery and review | Sample reset restores fictional fixtures. The current readiness, decision, and timeline can be exported as local JSON. Storage failures are explained while the current tab remains usable. |

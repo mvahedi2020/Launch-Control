@@ -31,6 +31,7 @@ export default function App() {
   const [decisionNote, setDecisionNote] = useState('')
   const evidenceSnapshotRef = useRef(evidenceSnapshots(initial.plan))
   const status = readiness(plan)
+  const prelaunchOpen = plan.phase === 'prelaunch'
 
   useEffect(() => {
     const onHash = () => setView(viewFromHash())
@@ -56,6 +57,7 @@ export default function App() {
     try { localStorage.removeItem(STORAGE_KEY); setWarning('') } catch { setWarning('Browser storage is unavailable. The sample launch is restored for this tab.') }
   }
   const updateDependency = (id: string, field: 'ownerId' | 'state', value: string) => setPlan((current) => {
+    if (current.phase !== 'prelaunch') return current
     const item = current.dependencies.find((dependency) => dependency.id === id)
     if (!item || item[field] === value) return current
     const next = { ...current, dependencies: current.dependencies.map((dependency) => dependency.id === id ? { ...dependency, [field]: value } as typeof dependency : dependency) }
@@ -64,6 +66,7 @@ export default function App() {
     return revokeGoIfBlocked(appendEvent(next, { id: `dependency-${Date.now()}`, at, title: field === 'state' ? 'Dependency state updated' : 'Dependency owner updated', detail, kind: value === 'blocked' || !value ? 'warning' : 'info' }), at)
   })
   const updateCheck = (id: string, patch: Partial<LaunchPlan['checks'][number]>) => setPlan((current) => {
+    if (current.phase !== 'prelaunch') return current
     const item = current.checks.find((check) => check.id === id)
     if (!item) return current
     const next = { ...current, checks: current.checks.map((check) => check.id === id ? { ...check, ...patch } : check) }
@@ -123,22 +126,22 @@ export default function App() {
           <div className="section-title"><div><p className="eyebrow">01 · Dependencies</p><h2>Resolve upstream work</h2></div><span>{plan.dependencies.filter((item) => item.state === 'ready' && item.ownerId).length} of {plan.dependencies.length}</span></div>
           <div className="gate-card">{plan.dependencies.map((dependency) => <article className="dependency" key={dependency.id}>
             <span className={`status-dot ${dependency.state}`} aria-hidden="true" /><div className="gate-copy"><b>{dependency.name}</b><small>{dependency.note}</small></div>
-            <label><span>Owner</span><select aria-label={`${dependency.name} owner`} value={dependency.ownerId} onChange={(event) => updateDependency(dependency.id, 'ownerId', event.target.value)}><option value="">Unassigned</option>{plan.owners.map((owner) => <option key={owner.id} value={owner.id}>{owner.name}</option>)}</select></label>
-            <label><span>State</span><select aria-label={`${dependency.name} state`} value={dependency.state} onChange={(event) => updateDependency(dependency.id, 'state', event.target.value as GateState)}><option value="ready">Ready</option><option value="watching">Watching</option><option value="blocked">Blocked</option></select></label>
+            <label><span>Owner</span><select disabled={!prelaunchOpen} aria-label={`${dependency.name} owner`} value={dependency.ownerId} onChange={(event) => updateDependency(dependency.id, 'ownerId', event.target.value)}><option value="">Unassigned</option>{plan.owners.map((owner) => <option key={owner.id} value={owner.id}>{owner.name}</option>)}</select></label>
+            <label><span>State</span><select disabled={!prelaunchOpen} aria-label={`${dependency.name} state`} value={dependency.state} onChange={(event) => updateDependency(dependency.id, 'state', event.target.value as GateState)}><option value="ready">Ready</option><option value="watching">Watching</option><option value="blocked">Blocked</option></select></label>
           </article>)}</div>
 
           <div className="section-title checks-title"><div><p className="eyebrow">02 · Checks</p><h2>Capture readiness evidence</h2></div><span>{plan.checks.filter((item) => item.complete).length} of {plan.checks.length}</span></div>
           <div className="gate-card">{plan.checks.map((check) => { const unlocked = checkUnlocked(plan, check.id); const waitingOn = check.dependencyIds.map((id) => plan.dependencies.find((item) => item.id === id)).filter((item) => item && (item.state !== 'ready' || !item.ownerId)).map((item) => item!.name); return <article className={`check-row ${check.complete ? 'complete' : ''} ${unlocked ? '' : 'locked'}`} key={check.id}>
-            <label className="check-control"><input type="checkbox" checked={check.complete} disabled={!unlocked} onChange={(event) => updateCheck(check.id, { complete: event.target.checked })} /><span><Check size={15} /></span><div><b>{check.name}</b><small>{unlocked ? `${check.mandatory ? 'Required gate' : 'Optional check'} · ${ownerName(plan, check.ownerId)}` : `Waiting on ${waitingOn.join(', ')}`}</small></div></label>
-            <select disabled={!unlocked} aria-label={`${check.name} owner`} value={check.ownerId} onChange={(event) => updateCheck(check.id, { ownerId: event.target.value })}><option value="">Unassigned</option>{plan.owners.map((owner) => <option key={owner.id} value={owner.id}>{owner.name}</option>)}</select>
-            <input disabled={!unlocked} className="evidence" aria-label={`${check.name} evidence`} value={check.evidence} placeholder={unlocked ? 'Add sample evidence or reference' : 'Resolve dependency first'} onChange={(event) => updateCheck(check.id, { evidence: event.target.value })} onBlur={(event) => recordEvidence(check.id, event.currentTarget.value)} />
+            <label className="check-control"><input type="checkbox" checked={check.complete} disabled={!prelaunchOpen || !unlocked} onChange={(event) => updateCheck(check.id, { complete: event.target.checked })} /><span><Check size={15} /></span><div><b>{check.name}</b><small>{unlocked ? `${check.mandatory ? 'Required gate' : 'Optional check'} · ${ownerName(plan, check.ownerId)}` : `Waiting on ${waitingOn.join(', ')}`}</small></div></label>
+            <select disabled={!prelaunchOpen || !unlocked} aria-label={`${check.name} owner`} value={check.ownerId} onChange={(event) => updateCheck(check.id, { ownerId: event.target.value })}><option value="">Unassigned</option>{plan.owners.map((owner) => <option key={owner.id} value={owner.id}>{owner.name}</option>)}</select>
+            <input disabled={!prelaunchOpen || !unlocked} className="evidence" aria-label={`${check.name} evidence`} value={check.evidence} placeholder={unlocked ? 'Add sample evidence or reference' : 'Resolve dependency first'} onChange={(event) => updateCheck(check.id, { evidence: event.target.value })} onBlur={(event) => recordEvidence(check.id, event.currentTarget.value)} />
           </article>})}</div>
         </section>
 
         <aside className="decision-panel">
           <p className="eyebrow">03 · Decision</p><h2>Record the call</h2><p>A launch decision needs a clear choice and rationale. Any later gate change is still enforced.</p>
-          <div className="decision-options" role="radiogroup" aria-label="Launch decision"><label className={`${decisionChoice === 'go' ? 'selected' : ''} ${status.blockers.length ? 'locked-choice' : ''}`}><input type="radio" name="decision" value="go" checked={decisionChoice === 'go'} disabled={status.blockers.length > 0} onChange={() => setDecisionChoice('go')} /><CircleCheck size={20} /><span><b>Go</b><small>{status.blockers.length ? 'Clear every required gate first' : 'Proceed when all gates clear'}</small></span></label><label className={decisionChoice === 'no-go' ? 'selected no-go' : ''}><input type="radio" name="decision" value="no-go" checked={decisionChoice === 'no-go'} onChange={() => setDecisionChoice('no-go')} /><AlertTriangle size={20} /><span><b>No-go</b><small>Hold this launch window</small></span></label></div>
-          <label className="rationale"><span>Decision rationale</span><textarea aria-label="Decision rationale" value={decisionNote} onChange={(event) => setDecisionNote(event.target.value)} placeholder="What supports this decision?" rows={3} /></label>
+          <div className="decision-options" role="radiogroup" aria-label="Launch decision"><label className={`${decisionChoice === 'go' ? 'selected' : ''} ${status.blockers.length ? 'locked-choice' : ''}`}><input type="radio" name="decision" value="go" checked={decisionChoice === 'go'} disabled={!prelaunchOpen || status.blockers.length > 0} onChange={() => setDecisionChoice('go')} /><CircleCheck size={20} /><span><b>Go</b><small>{status.blockers.length ? 'Clear every required gate first' : 'Proceed when all gates clear'}</small></span></label><label className={decisionChoice === 'no-go' ? 'selected no-go' : ''}><input type="radio" name="decision" value="no-go" checked={decisionChoice === 'no-go'} disabled={!prelaunchOpen} onChange={() => setDecisionChoice('no-go')} /><AlertTriangle size={20} /><span><b>No-go</b><small>Hold this launch window</small></span></label></div>
+          <label className="rationale"><span>Decision rationale</span><textarea disabled={!prelaunchOpen} aria-label="Decision rationale" value={decisionNote} onChange={(event) => setDecisionNote(event.target.value)} placeholder="What supports this decision?" rows={3} /></label>
           <button className="button secondary full" onClick={recordDecision} disabled={!decisionChoice || !canRecordDecision(plan, decisionChoice, decisionNote)}>Record decision</button>
           {plan.decision && <div className={`recorded ${plan.decision.value}`}><ShieldCheck size={18} /><div><b>{plan.decision.value === 'go' ? 'Go recorded' : 'No-go recorded'}</b><small>{plan.decision.recordedAt}</small></div></div>}
           <div className="launch-rule"><p>{status.blockers.length ? `${status.blockers[0]}. Any recorded Go is withdrawn until this is resolved.` : plan.decision?.value !== 'go' ? 'Record a go decision to unlock launch.' : 'Required gates and decision are ready.'}</p><button className="button primary full" onClick={launch} disabled={!canLaunch(plan)}><Zap size={17} />Simulate launch</button></div>

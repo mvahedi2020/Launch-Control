@@ -38,6 +38,22 @@ test('requires an explicit incident response after launch', async ({ page }) => 
   await expect(page.getByText('Rollout paused', { exact: true })).toBeVisible()
 })
 
+test('locks pre-launch gates after launch while retaining the sample response path', async ({ page }) => {
+  await page.getByLabel('Support enablement state').selectOption('ready')
+  await page.getByLabel('Support runbook rehearsed evidence').fill('Sample rehearsal notes')
+  await page.getByText('Support runbook rehearsed', { exact: true }).click()
+  await page.getByLabel('Launch decision').getByText('Go', { exact: true }).click()
+  await page.getByLabel('Decision rationale').fill('All required sample evidence reviewed.')
+  await page.getByRole('button', { name: 'Record decision' }).click()
+  await page.getByRole('button', { name: 'Simulate launch' }).click()
+
+  await expect(page.getByLabel('Support enablement state')).toBeDisabled()
+  await expect(page.getByLabel('Regression suite reviewed evidence')).toBeDisabled()
+  await page.getByRole('button', { name: 'Run sample post-launch issue' }).click()
+  await page.getByRole('button', { name: 'Pause rollout' }).click()
+  await expect(page.getByText('Rollout paused', { exact: true })).toBeVisible()
+})
+
 test('withdraws a recorded go if required evidence is removed', async ({ page }) => {
   await page.getByLabel('Support enablement state').selectOption('ready')
   await page.getByLabel('Support runbook rehearsed evidence').fill('Sample rehearsal notes')
