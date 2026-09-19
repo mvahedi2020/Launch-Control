@@ -18,7 +18,7 @@ export function isLaunchPlan(value: unknown): value is LaunchPlan {
   if (!value.dependencies.every((dependency) => isRecord(dependency) && isId(dependency.id) && hasText(dependency.name) && knownOwner(dependency.ownerId) && isGateState(dependency.state) && hasText(dependency.note))) return false
   const dependencyIds = new Set(value.dependencies.map((dependency) => dependency.id))
   if (dependencyIds.size !== value.dependencies.length || !hasUniqueNormalizedIds([...dependencyIds])) return false
-  if (!value.checks.every((check) => isRecord(check) && isId(check.id) && hasText(check.name) && knownOwner(check.ownerId) && typeof check.mandatory === 'boolean' && typeof check.complete === 'boolean' && isString(check.evidence) && Array.isArray(check.dependencyIds) && check.dependencyIds.every((id) => isId(id) && dependencyIds.has(id)))) return false
+  if (!value.checks.every((check) => isRecord(check) && isId(check.id) && hasText(check.name) && knownOwner(check.ownerId) && typeof check.mandatory === 'boolean' && typeof check.complete === 'boolean' && isString(check.evidence) && Array.isArray(check.dependencyIds) && check.dependencyIds.every((id) => isId(id) && dependencyIds.has(id)) && new Set(check.dependencyIds).size === check.dependencyIds.length)) return false
   const checkIds = value.checks.map((check) => check.id)
   if (new Set(checkIds).size !== value.checks.length || !hasUniqueNormalizedIds(checkIds)) return false
   if (value.decision !== null && (!isRecord(value.decision) || (value.decision.value !== 'go' && value.decision.value !== 'no-go') || !hasText(value.decision.note) || !hasText(value.decision.recordedAt))) return false

@@ -106,6 +106,7 @@ describe('launch gate policy', () => {
     expect(isLaunchPlan({ ...samplePlan, owners: [{ ...samplePlan.owners[0], name: ' ' }, ...samplePlan.owners.slice(1)] })).toBe(false)
     expect(isLaunchPlan({ ...samplePlan, owners: [samplePlan.owners[0], { ...samplePlan.owners[1], id: samplePlan.owners[0].id.toUpperCase() }, ...samplePlan.owners.slice(2)] })).toBe(false)
     expect(isLaunchPlan({ ...samplePlan, decision: { value: 'no-go', note: ' ', recordedAt: 'now' } })).toBe(false)
+    expect(isLaunchPlan({ ...samplePlan, checks: [{ ...samplePlan.checks[0], dependencyIds: ['billing', 'billing'] }, ...samplePlan.checks.slice(1)] })).toBe(false)
   })
 
   it('only resolves an active incident from the launched phase', () => {
