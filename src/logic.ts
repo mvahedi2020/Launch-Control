@@ -2,25 +2,30 @@ import type { Decision, LaunchPlan, TimelineEvent } from './types'
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value)
 const isString = (value: unknown): value is string => typeof value === 'string'
+const hasText = (value: unknown): value is string => isString(value) && value.trim().length > 0
+const isId = (value: unknown): value is string => hasText(value) && value === value.trim()
+const hasUniqueNormalizedIds = (values: string[]) => new Set(values.map((value) => value.toLowerCase())).size === values.length
 const isGateState = (value: unknown) => value === 'ready' || value === 'watching' || value === 'blocked'
 const isPhase = (value: unknown) => value === 'prelaunch' || value === 'launched' || value === 'paused' || value === 'rolledback'
 const isEventKind = (value: unknown) => value === 'info' || value === 'success' || value === 'warning' || value === 'critical'
 
 export function isLaunchPlan(value: unknown): value is LaunchPlan {
-  if (!isRecord(value) || !isString(value.name) || !isString(value.window) || !isPhase(value.phase) || !Array.isArray(value.owners) || !Array.isArray(value.dependencies) || !Array.isArray(value.checks) || !Array.isArray(value.timeline)) return false
-  if (!value.owners.every((owner) => isRecord(owner) && isString(owner.id) && isString(owner.name) && isString(owner.role) && isString(owner.initials))) return false
+  if (!isRecord(value) || !hasText(value.name) || !hasText(value.window) || !isPhase(value.phase) || !Array.isArray(value.owners) || !Array.isArray(value.dependencies) || !Array.isArray(value.checks) || !Array.isArray(value.timeline)) return false
+  if (!value.owners.every((owner) => isRecord(owner) && isId(owner.id) && hasText(owner.name) && hasText(owner.role) && hasText(owner.initials))) return false
   const ownerIds = new Set(value.owners.map((owner) => owner.id))
-  if (ownerIds.size !== value.owners.length) return false
+  if (ownerIds.size !== value.owners.length || !hasUniqueNormalizedIds([...ownerIds])) return false
   const knownOwner = (id: unknown) => isString(id) && (!id || ownerIds.has(id))
-  if (!value.dependencies.every((dependency) => isRecord(dependency) && isString(dependency.id) && isString(dependency.name) && knownOwner(dependency.ownerId) && isGateState(dependency.state) && isString(dependency.note))) return false
+  if (!value.dependencies.every((dependency) => isRecord(dependency) && isId(dependency.id) && hasText(dependency.name) && knownOwner(dependency.ownerId) && isGateState(dependency.state) && hasText(dependency.note))) return false
   const dependencyIds = new Set(value.dependencies.map((dependency) => dependency.id))
-  if (dependencyIds.size !== value.dependencies.length) return false
-  if (!value.checks.every((check) => isRecord(check) && isString(check.id) && isString(check.name) && knownOwner(check.ownerId) && typeof check.mandatory === 'boolean' && typeof check.complete === 'boolean' && isString(check.evidence) && Array.isArray(check.dependencyIds) && check.dependencyIds.every((id) => isString(id) && dependencyIds.has(id)))) return false
-  if (new Set(value.checks.map((check) => check.id)).size !== value.checks.length) return false
-  if (value.decision !== null && (!isRecord(value.decision) || (value.decision.value !== 'go' && value.decision.value !== 'no-go') || !isString(value.decision.note) || !isString(value.decision.recordedAt))) return false
-  if (!value.timeline.every((event) => isRecord(event) && isString(event.id) && isString(event.at) && isString(event.title) && isString(event.detail) && isEventKind(event.kind))) return false
-  if (new Set(value.timeline.map((event) => event.id)).size !== value.timeline.length) return false
-  if (value.incident !== null && (!isRecord(value.incident) || typeof value.incident.active !== 'boolean' || !isString(value.incident.openedAt) || (value.incident.decision !== undefined && value.incident.decision !== 'pause' && value.incident.decision !== 'rollback'))) return false
+  if (dependencyIds.size !== value.dependencies.length || !hasUniqueNormalizedIds([...dependencyIds])) return false
+  if (!value.checks.every((check) => isRecord(check) && isId(check.id) && hasText(check.name) && knownOwner(check.ownerId) && typeof check.mandatory === 'boolean' && typeof check.complete === 'boolean' && isString(check.evidence) && Array.isArray(check.dependencyIds) && check.dependencyIds.every((id) => isId(id) && dependencyIds.has(id)))) return false
+  const checkIds = value.checks.map((check) => check.id)
+  if (new Set(checkIds).size !== value.checks.length || !hasUniqueNormalizedIds(checkIds)) return false
+  if (value.decision !== null && (!isRecord(value.decision) || (value.decision.value !== 'go' && value.decision.value !== 'no-go') || !hasText(value.decision.note) || !hasText(value.decision.recordedAt))) return false
+  if (!value.timeline.every((event) => isRecord(event) && isId(event.id) && hasText(event.at) && hasText(event.title) && hasText(event.detail) && isEventKind(event.kind))) return false
+  const eventIds = value.timeline.map((event) => event.id)
+  if (new Set(eventIds).size !== value.timeline.length || !hasUniqueNormalizedIds(eventIds)) return false
+  if (value.incident !== null && (!isRecord(value.incident) || typeof value.incident.active !== 'boolean' || !hasText(value.incident.openedAt) || (value.incident.decision !== undefined && value.incident.decision !== 'pause' && value.incident.decision !== 'rollback'))) return false
   if (value.phase === 'prelaunch') return value.incident === null
   if (value.phase === 'launched') return value.incident === null || (value.incident.active === true && value.incident.decision === undefined)
   return Boolean(value.incident && !value.incident.active && value.incident.decision === (value.phase === 'paused' ? 'pause' : 'rollback'))
