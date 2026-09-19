@@ -8,6 +8,12 @@ const hasUniqueNormalizedIds = (values: string[]) => new Set(values.map((value) 
 const isGateState = (value: unknown) => value === 'ready' || value === 'watching' || value === 'blocked'
 const isPhase = (value: unknown) => value === 'prelaunch' || value === 'launched' || value === 'paused' || value === 'rolledback'
 const isEventKind = (value: unknown) => value === 'info' || value === 'success' || value === 'warning' || value === 'critical'
+let fallbackEventSequence = 0
+
+export function newTimelineId(prefix: string): string {
+  const suffix = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${++fallbackEventSequence}`
+  return `${prefix}-${suffix}`
+}
 
 export function isLaunchPlan(value: unknown): value is LaunchPlan {
   if (!isRecord(value) || !hasText(value.name) || !hasText(value.window) || !isPhase(value.phase) || !Array.isArray(value.owners) || !Array.isArray(value.dependencies) || !Array.isArray(value.checks) || !Array.isArray(value.timeline)) return false
@@ -98,7 +104,7 @@ export function revokeGoIfBlocked(plan: LaunchPlan, at: string): LaunchPlan {
   if (plan.decision?.value !== 'go' || readiness(plan).blockers.length === 0) return plan
   return appendEvent(
     { ...plan, decision: null },
-    { id: `go-revoked-${Date.now()}`, at, title: 'Go decision withdrawn', detail: 'A required gate changed after Go was recorded. Clear the blocker and record a new decision.', kind: 'warning' },
+    { id: newTimelineId('go-revoked'), at, title: 'Go decision withdrawn', detail: 'A required gate changed after Go was recorded. Clear the blocker and record a new decision.', kind: 'warning' },
   )
 }
 
@@ -112,7 +118,7 @@ export function appendEvidenceSnapshot(plan: LaunchPlan, checkId: string, previo
   const evidence = nextValue.trim()
   if (!check || previous === evidence) return plan
   return appendEvent(plan, {
-    id: `evidence-${checkId}-${Date.now()}`,
+    id: newTimelineId(`evidence-${checkId}`),
     at,
     title: 'Readiness evidence recorded',
     detail: evidence ? `${check.name}: ${evidence}` : `${check.name}: evidence cleared`,

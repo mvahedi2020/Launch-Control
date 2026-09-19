@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ArrowUpRight, Check, ChevronRight, CircleCheck, Clock3, Download, RotateCcw, ShieldCheck, Zap } from 'lucide-react'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, openSampleIncident, ownerName, readiness, recordDecision as saveDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, newTimelineId, openSampleIncident, ownerName, readiness, recordDecision as saveDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
 import type { GateState, LaunchPlan } from './types'
 
 const STORAGE_KEY = 'northstar.launch-control.session.v1'
@@ -63,7 +63,7 @@ export default function App() {
     const next = { ...current, dependencies: current.dependencies.map((dependency) => dependency.id === id ? { ...dependency, [field]: value } as typeof dependency : dependency) }
     const detail = field === 'state' ? `${item.name} changed to ${value}.` : `${item.name} assigned to ${ownerName(current, value)}.`
     const at = now()
-    return revokeGoIfBlocked(appendEvent(next, { id: `dependency-${Date.now()}`, at, title: field === 'state' ? 'Dependency state updated' : 'Dependency owner updated', detail, kind: value === 'blocked' || !value ? 'warning' : 'info' }), at)
+    return revokeGoIfBlocked(appendEvent(next, { id: newTimelineId('dependency'), at, title: field === 'state' ? 'Dependency state updated' : 'Dependency owner updated', detail, kind: value === 'blocked' || !value ? 'warning' : 'info' }), at)
   })
   const updateCheck = (id: string, patch: Partial<LaunchPlan['checks'][number]>) => setPlan((current) => {
     if (current.phase !== 'prelaunch') return current
@@ -71,8 +71,8 @@ export default function App() {
     if (!item) return current
     const next = { ...current, checks: current.checks.map((check) => check.id === id ? { ...check, ...patch } : check) }
     const at = now()
-    if ('complete' in patch && patch.complete !== item.complete) return revokeGoIfBlocked(appendEvent(next, { id: `check-${Date.now()}`, at, title: patch.complete ? 'Readiness check completed' : 'Readiness check reopened', detail: item.name, kind: patch.complete ? 'success' : 'warning' }), at)
-    if ('ownerId' in patch && patch.ownerId !== item.ownerId) return revokeGoIfBlocked(appendEvent(next, { id: `check-owner-${Date.now()}`, at, title: 'Check owner updated', detail: `${item.name} assigned to ${ownerName(current, patch.ownerId ?? '')}.`, kind: patch.ownerId ? 'info' : 'warning' }), at)
+    if ('complete' in patch && patch.complete !== item.complete) return revokeGoIfBlocked(appendEvent(next, { id: newTimelineId('check'), at, title: patch.complete ? 'Readiness check completed' : 'Readiness check reopened', detail: item.name, kind: patch.complete ? 'success' : 'warning' }), at)
+    if ('ownerId' in patch && patch.ownerId !== item.ownerId) return revokeGoIfBlocked(appendEvent(next, { id: newTimelineId('check-owner'), at, title: 'Check owner updated', detail: `${item.name} assigned to ${ownerName(current, patch.ownerId ?? '')}.`, kind: patch.ownerId ? 'info' : 'warning' }), at)
     if ('evidence' in patch && patch.evidence !== item.evidence) return revokeGoIfBlocked(next, at)
     return next
   })
@@ -93,19 +93,19 @@ export default function App() {
   const recordDecision = () => {
     if (!decisionChoice) return
     const recordedAt = now()
-    setPlan((current) => saveDecision(current, decisionChoice, decisionNote, recordedAt, `decision-${Date.now()}`))
+    setPlan((current) => saveDecision(current, decisionChoice, decisionNote, recordedAt, newTimelineId('decision')))
   }
   const launch = () => {
     const at = now()
-    setPlan((current) => simulateLaunch(current, at, `launch-${Date.now()}`))
+    setPlan((current) => simulateLaunch(current, at, newTimelineId('launch')))
   }
   const openIncident = () => {
     const at = now()
-    setPlan((current) => openSampleIncident(current, at, `incident-${Date.now()}`))
+    setPlan((current) => openSampleIncident(current, at, newTimelineId('incident')))
   }
   const decideIncident = (decision: 'pause' | 'rollback') => {
     const at = now()
-    setPlan((current) => resolveSampleIncident(current, decision, at, `${decision}-${Date.now()}`))
+    setPlan((current) => resolveSampleIncident(current, decision, at, newTimelineId(decision)))
   }
 
   const phaseLabel = plan.phase === 'prelaunch' ? 'Pre-launch review' : plan.phase === 'launched' ? 'Launch complete' : plan.phase === 'paused' ? 'Rollout paused' : 'Rolled back'

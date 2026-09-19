@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, newTimelineId, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
 
 describe('launch gate policy', () => {
   it('blocks launch on unresolved dependencies and mandatory checks', () => {
@@ -69,6 +69,10 @@ describe('launch gate policy', () => {
     const next = appendEvent(samplePlan, { id: 'test', at: 'now', title: 'Test', detail: 'Recorded', kind: 'info' })
     expect(next.timeline).toHaveLength(samplePlan.timeline.length + 1)
     expect(samplePlan.timeline).toHaveLength(2)
+  })
+
+  it('creates distinct timeline identities for rapid events', () => {
+    expect(newTimelineId('event')).not.toBe(newTimelineId('event'))
   })
 
   it('records a changed pre-launch decision once and rejects a duplicate or post-launch decision', () => {
