@@ -21,7 +21,16 @@ test('enforces gates, records go, and completes a simulated launch', async ({ pa
   await expect(page.getByRole('heading', { name: 'Launch completed' })).toBeVisible()
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Export summary' }).click()
-  expect((await download).suggestedFilename()).toBe('launch-control-summary.json')
+  const file = await download
+  expect(file.suggestedFilename()).toBe('launch-control-summary.json')
+  const stream = await file.createReadStream()
+  if (!stream) throw new Error('The launch summary was not readable')
+  let json = ''
+  for await (const chunk of stream) json += chunk.toString()
+  const payload = JSON.parse(json)
+  expect(payload.boundary).toBe('Fictional simulation; no production action')
+  expect(payload.summary).toEqual({ phase: 'launched', recordedDecision: 'go', blockers: [] })
+  await expect(page.getByRole('status')).toContainText('Launch complete exported as a fictional simulation with 0 readiness blockers')
 })
 
 test('requires an explicit incident response after launch', async ({ page }) => {

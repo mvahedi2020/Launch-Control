@@ -29,6 +29,7 @@ export default function App() {
   const [view, setView] = useState<View>(viewFromHash)
   const [decisionChoice, setDecisionChoice] = useState<'go' | 'no-go' | ''>('')
   const [decisionNote, setDecisionNote] = useState('')
+  const [exportNotice, setExportNotice] = useState('')
   const evidenceSnapshotRef = useRef(evidenceSnapshots(initial.plan))
   const status = readiness(plan)
   const prelaunchOpen = plan.phase === 'prelaunch'
@@ -85,9 +86,10 @@ export default function App() {
     setPlan((current) => appendEvidenceSnapshot(current, id, previous, evidence, at))
   }
   const exportSummary = () => {
-    const payload = { product: 'Launch Control sample', exportedAt: new Date().toISOString(), readiness: readiness(plan), launch: plan }
+    const payload = { product: 'Launch Control sample', boundary: 'Fictional simulation; no production action', exportedAt: new Date().toISOString(), summary: { phase: plan.phase, recordedDecision: plan.decision?.value ?? 'none', blockers: status.blockers }, readiness: status, launch: plan }
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))
-    const link = document.createElement('a'); link.href = url; link.download = 'launch-control-summary.json'; link.click(); URL.revokeObjectURL(url)
+    const link = document.createElement('a'); link.href = url; link.download = 'launch-control-summary.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000)
+    setExportNotice(`${phaseLabel} exported as a fictional simulation with ${status.blockers.length} readiness ${status.blockers.length === 1 ? 'blocker' : 'blockers'}.`)
   }
 
   const recordDecision = () => {
@@ -118,6 +120,7 @@ export default function App() {
     </header>
     <main>
       {warning && <div className="warning" role="alert"><AlertTriangle size={18} />{warning}</div>}
+      {exportNotice && <div className="warning" role="status"><ShieldCheck size={18} />{exportNotice}</div>}
       {view === 'command' && <>
         <section className="command-head"><div><p className="eyebrow">Release command · {plan.window}</p><h1>{plan.name}</h1><p>Resolve every required gate, record the decision, then run a simulated launch.</p></div><div className={`phase ${plan.phase}`}><span /><div><small>Current state</small><b>{phaseLabel}</b></div></div></section>
         <section className="scorebar" aria-label="Launch readiness summary"><div className="score"><strong>{status.passed}<small> / {status.total}</small></strong><span>Required gates ready</span></div><div className="progress"><span style={{ width: `${status.total ? status.passed / status.total * 100 : 0}%` }} /></div><div className="score-note">{status.blockers.length ? <><AlertTriangle size={17} /><b>{status.blockers.length} blocker{status.blockers.length === 1 ? '' : 's'} before launch</b></> : <><CircleCheck size={17} /><b>All required gates cleared</b></>}</div></section>
