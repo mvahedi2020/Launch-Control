@@ -47,8 +47,8 @@ As a launch lead, I can verify owners, dependencies, checks, and evidence before
 | Require evidence for mandatory work | A required check passes only when it is unlocked, has an owner, is complete, and contains nonblank evidence. Readiness changes immediately while one snapshot is recorded when a changed evidence edit is completed; optional checks do not change the launch rule. |
 | Enforce the decision rule | Go or No-go can be recorded with a timestamp and rationale. Simulate launch is enabled only in pre-launch when every required gate clears and the current decision is Go; prerequisite controls become read-only once the simulated launch phase begins. |
 | Handle regression honestly | If a required dependency or evidence regresses after Go, the Go decision is withdrawn, the timeline records that withdrawal, and a new Go decision is required after the blocker clears. |
-| Make the response trail inspectable | Simulated launch and subsequent state changes appear in a local timestamped timeline. A sample post-launch issue requires either Pause rollout or Roll back release before it is resolved. |
-| Support recovery and review | Sample reset restores fictional fixtures. The current readiness, decision, and timeline can be exported as local JSON. Storage failures are explained while the current tab remains usable. |
+| Make the response trail inspectable | Simulated launch and subsequent state changes appear in a local timestamped timeline with a distinct event identity. A sample post-launch issue requires either Pause rollout or Roll back release before it is resolved. |
+| Support recovery and review | Sample reset restores fictional fixtures. The current readiness, decision, and timeline can be exported as local JSON with its phase, blockers, and fictional-simulation boundary. Storage failures are explained while the current tab remains usable. |
 | Make the demo broadly inspectable | Hash navigation supports browser back and forward. Native labels, visible focus treatment, keyboard controls, responsive layouts, empty states, and errors are supported. |
 
 ## Acceptance examples at the decision boundary
@@ -61,6 +61,7 @@ As a launch lead, I can verify owners, dependencies, checks, and evidence before
 | The missing evidence is restored | A new Go decision is still required before simulated launch. | Resolving a blocker is distinct from granting approval. |
 | An optional check is incomplete | It does not enter the required-gate calculation. | Optional work cannot secretly become a launch prerequisite. |
 | The launch has already completed | A second simulated launch is unavailable in that phase. | A launch action belongs to a particular state transition. |
+| Saved records contain blank or ambiguous identities | Reject the stored session and show the known fictional launch with a warning. | Restored timelines and gate relationships must remain reconstructable. |
 
 Rationale and evidence are review inputs, not independently verified proof. Authenticity, approval permissions, and production policy enforcement remain outside this sample.
 
