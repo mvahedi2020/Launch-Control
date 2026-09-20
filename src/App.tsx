@@ -31,6 +31,7 @@ export default function App() {
   const [decisionChoice, setDecisionChoice] = useState<'go' | 'no-go' | ''>('')
   const [decisionNote, setDecisionNote] = useState('')
   const [exportNotice, setExportNotice] = useState('')
+  const [exportSignature, setExportSignature] = useState('')
   const evidenceSnapshotRef = useRef(evidenceSnapshots(initial.plan))
   const status = readiness(plan)
   const prelaunchOpen = plan.phase === 'prelaunch'
@@ -53,6 +54,13 @@ export default function App() {
   useEffect(() => {
     if (status.blockers.length && decisionChoice === 'go') setDecisionChoice('')
   }, [decisionChoice, status.blockers.length])
+
+  useEffect(() => {
+    if (exportSignature && exportSignature !== JSON.stringify(plan)) {
+      setExportNotice('')
+      setExportSignature('')
+    }
+  }, [exportSignature, plan])
 
   const reset = () => {
     setPlan(clonePlan(samplePlan)); setDecisionChoice(''); setDecisionNote('')
@@ -92,6 +100,7 @@ export default function App() {
     const payload = { product: 'Launch Control sample', boundary: 'Fictional simulation; no production action', exportedAt: new Date().toISOString(), summary: { phase: plan.phase, recordedDecision: plan.decision?.value ?? 'none', blockers: status.blockers }, readiness: status, launch: plan }
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))
     const link = document.createElement('a'); link.href = url; link.download = 'launch-control-summary.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000)
+    setExportSignature(JSON.stringify(plan))
     setExportNotice(`${phaseLabel} exported as a fictional simulation with ${status.blockers.length} readiness ${status.blockers.length === 1 ? 'blocker' : 'blockers'}.`)
   }
 

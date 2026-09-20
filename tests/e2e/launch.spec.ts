@@ -73,6 +73,13 @@ test('locks pre-launch gates after launch while retaining the sample response pa
   await expect(page.getByText('Rollout paused', { exact: true })).toBeVisible()
 })
 
+test('clears an export notice when the launch plan changes', async ({ page }) => {
+  await page.getByRole('button', { name: 'Export summary' }).click()
+  await expect(page.getByRole('status')).toContainText('fictional simulation')
+  await page.getByLabel('Support enablement state').selectOption('ready')
+  await expect(page.getByRole('status')).toHaveCount(0)
+})
+
 test('withdraws a recorded go if required evidence is removed', async ({ page }) => {
   await page.getByLabel('Support enablement state').selectOption('ready')
   await page.getByLabel('Support runbook rehearsed evidence').fill('Sample rehearsal notes')
