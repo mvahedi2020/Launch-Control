@@ -10,15 +10,15 @@ const now = () => new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'sh
 const viewFromHash = (): View => location.hash === '#timeline' ? 'timeline' : location.hash === '#about' ? 'about' : 'command'
 const evidenceSnapshots = (plan: LaunchPlan) => Object.fromEntries(plan.checks.map((check) => [check.id, check.evidence.trim()]))
 
-function readSaved(): { plan: LaunchPlan; warning: string } {
+function readSaved(): { plan: LaunchPlan; warning: string; preserveInvalid: boolean } {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { plan: clonePlan(samplePlan), warning: '' }
+    if (!raw) return { plan: clonePlan(samplePlan), warning: '', preserveInvalid: false }
     const parsed = JSON.parse(raw) as { version: number; plan: LaunchPlan }
     if (parsed.version !== 1 || !isLaunchPlan(parsed.plan)) throw new Error('Unsupported saved data')
-    return { plan: parsed.plan, warning: '' }
+    return { plan: parsed.plan, warning: '', preserveInvalid: false }
   } catch {
-    return { plan: clonePlan(samplePlan), warning: 'Saved launch data could not be read. This session is using the sample launch.' }
+    return { plan: clonePlan(samplePlan), warning: 'Saved launch data could not be read. The existing browser data is preserved; choose Reset sample to replace it.', preserveInvalid: true }
   }
 }
 
@@ -26,6 +26,7 @@ export default function App() {
   const initial = useMemo(readSaved, [])
   const [plan, setPlan] = useState(initial.plan)
   const [warning, setWarning] = useState(initial.warning)
+  const [preserveInvalid, setPreserveInvalid] = useState(initial.preserveInvalid)
   const [view, setView] = useState<View>(viewFromHash)
   const [decisionChoice, setDecisionChoice] = useState<'go' | 'no-go' | ''>('')
   const [decisionNote, setDecisionNote] = useState('')
@@ -41,12 +42,13 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    if (preserveInvalid) return
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, savedAt: new Date().toISOString(), plan }))
     } catch {
       setWarning('Browser storage is unavailable. Progress remains in this tab, but it cannot be saved for later.')
     }
-  }, [plan])
+  }, [plan, preserveInvalid])
 
   useEffect(() => {
     if (status.blockers.length && decisionChoice === 'go') setDecisionChoice('')
@@ -54,6 +56,7 @@ export default function App() {
 
   const reset = () => {
     setPlan(clonePlan(samplePlan)); setDecisionChoice(''); setDecisionNote('')
+    setPreserveInvalid(false)
     evidenceSnapshotRef.current = evidenceSnapshots(samplePlan)
     try { localStorage.removeItem(STORAGE_KEY); setWarning('') } catch { setWarning('Browser storage is unavailable. The sample launch is restored for this tab.') }
   }

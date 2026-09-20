@@ -5,6 +5,16 @@ test.beforeEach(async ({ page }) => {
   await page.getByRole('button', { name: 'Reset sample' }).click()
 })
 
+test('preserves incompatible saved launch data until explicit reset', async ({ page }) => {
+  const original = '{"version":2,"plan":{"old":"data"}}'
+  await page.addInitScript((raw) => localStorage.setItem('northstar.launch-control.session.v1', raw), original)
+  await page.reload()
+  await expect(page.getByRole('alert')).toContainText('existing browser data is preserved')
+  expect(await page.evaluate(() => localStorage.getItem('northstar.launch-control.session.v1'))).toBe(original)
+  await page.getByRole('button', { name: 'Reset sample' }).click()
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('northstar.launch-control.session.v1')!).version)).toBe(1)
+})
+
 test('enforces gates, records go, and completes a simulated launch', async ({ page }) => {
   const launch = page.getByRole('button', { name: 'Simulate launch' })
   await expect(launch).toBeDisabled()
