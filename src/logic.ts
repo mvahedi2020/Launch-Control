@@ -8,6 +8,8 @@ const hasUniqueNormalizedIds = (values: string[]) => new Set(values.map((value) 
 const isGateState = (value: unknown) => value === 'ready' || value === 'watching' || value === 'blocked'
 const isPhase = (value: unknown) => value === 'prelaunch' || value === 'launched' || value === 'paused' || value === 'rolledback'
 const isEventKind = (value: unknown) => value === 'info' || value === 'success' || value === 'warning' || value === 'critical'
+export const MAX_EVIDENCE_LENGTH = 500
+export const MAX_RATIONALE_LENGTH = 500
 let fallbackEventSequence = 0
 
 export function newTimelineId(prefix: string): string {
@@ -24,10 +26,10 @@ export function isLaunchPlan(value: unknown): value is LaunchPlan {
   if (!value.dependencies.every((dependency) => isRecord(dependency) && isId(dependency.id) && hasText(dependency.name) && knownOwner(dependency.ownerId) && isGateState(dependency.state) && hasText(dependency.note))) return false
   const dependencyIds = new Set(value.dependencies.map((dependency) => dependency.id))
   if (dependencyIds.size !== value.dependencies.length || !hasUniqueNormalizedIds([...dependencyIds])) return false
-  if (!value.checks.every((check) => isRecord(check) && isId(check.id) && hasText(check.name) && knownOwner(check.ownerId) && typeof check.mandatory === 'boolean' && typeof check.complete === 'boolean' && isString(check.evidence) && Array.isArray(check.dependencyIds) && check.dependencyIds.every((id) => isId(id) && dependencyIds.has(id)) && new Set(check.dependencyIds).size === check.dependencyIds.length)) return false
+  if (!value.checks.every((check) => isRecord(check) && isId(check.id) && hasText(check.name) && knownOwner(check.ownerId) && typeof check.mandatory === 'boolean' && typeof check.complete === 'boolean' && isString(check.evidence) && check.evidence.length <= MAX_EVIDENCE_LENGTH && Array.isArray(check.dependencyIds) && check.dependencyIds.every((id) => isId(id) && dependencyIds.has(id)) && new Set(check.dependencyIds).size === check.dependencyIds.length)) return false
   const checkIds = value.checks.map((check) => check.id)
   if (new Set(checkIds).size !== value.checks.length || !hasUniqueNormalizedIds(checkIds)) return false
-  if (value.decision !== null && (!isRecord(value.decision) || (value.decision.value !== 'go' && value.decision.value !== 'no-go') || !hasText(value.decision.note) || !hasText(value.decision.recordedAt))) return false
+  if (value.decision !== null && (!isRecord(value.decision) || (value.decision.value !== 'go' && value.decision.value !== 'no-go') || !hasText(value.decision.note) || value.decision.note.length > MAX_RATIONALE_LENGTH || !hasText(value.decision.recordedAt))) return false
   if (!value.timeline.every((event) => isRecord(event) && isId(event.id) && hasText(event.at) && hasText(event.title) && hasText(event.detail) && isEventKind(event.kind))) return false
   const eventIds = value.timeline.map((event) => event.id)
   if (new Set(eventIds).size !== value.timeline.length || !hasUniqueNormalizedIds(eventIds)) return false
@@ -68,7 +70,7 @@ export function canLaunch(plan: LaunchPlan): boolean {
 
 export function canRecordDecision(plan: LaunchPlan, value: NonNullable<Decision>['value'], note: string): boolean {
   const rationale = note.trim()
-  if (plan.phase !== 'prelaunch' || rationale.length < 4 || (value === 'go' && readiness(plan).blockers.length > 0)) return false
+  if (plan.phase !== 'prelaunch' || rationale.length < 4 || rationale.length > MAX_RATIONALE_LENGTH || (value === 'go' && readiness(plan).blockers.length > 0)) return false
   return plan.decision?.value !== value || plan.decision.note !== rationale
 }
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, newTimelineId, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, MAX_EVIDENCE_LENGTH, MAX_RATIONALE_LENGTH, newTimelineId, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
 
 describe('launch gate policy', () => {
   it('blocks launch on unresolved dependencies and mandatory checks', () => {
@@ -82,6 +82,15 @@ describe('launch gate policy', () => {
     expect(canRecordDecision(recorded, 'no-go', 'Need more review')).toBe(false)
     expect(recordDecision(recorded, 'no-go', 'Need more review', 'later', 'decision-2')).toBe(recorded)
     expect(recordDecision({ ...recorded, phase: 'launched' }, 'go', 'Reconsidered', 'later', 'decision-3')).toEqual({ ...recorded, phase: 'launched' })
+  })
+
+  it('bounds evidence and rationale so restored and typed values share one contract', () => {
+    const plan = clonePlan(samplePlan)
+    plan.dependencies[1].state = 'ready'
+    plan.checks[2].complete = true
+    plan.checks[2].evidence = 'Sample rehearsal notes'
+    expect(isLaunchPlan({ ...plan, checks: plan.checks.map((check) => check.id === 'qa' ? { ...check, evidence: 'x'.repeat(MAX_EVIDENCE_LENGTH + 1) } : check) })).toBe(false)
+    expect(canRecordDecision(plan, 'no-go', 'x'.repeat(MAX_RATIONALE_LENGTH + 1))).toBe(false)
   })
 
   it('makes launch and incident transitions idempotent', () => {
