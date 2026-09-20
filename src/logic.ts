@@ -34,7 +34,11 @@ export function isLaunchPlan(value: unknown): value is LaunchPlan {
   const eventIds = value.timeline.map((event) => event.id)
   if (new Set(eventIds).size !== value.timeline.length || !hasUniqueNormalizedIds(eventIds)) return false
   if (value.incident !== null && (!isRecord(value.incident) || typeof value.incident.active !== 'boolean' || !hasText(value.incident.openedAt) || (value.incident.decision !== undefined && value.incident.decision !== 'pause' && value.incident.decision !== 'rollback'))) return false
-  if (value.phase === 'prelaunch') return value.incident === null
+  if (value.phase === 'prelaunch') {
+    if (value.incident !== null) return false
+    const candidate = value as unknown as LaunchPlan
+    return candidate.decision?.value !== 'go' || readiness(candidate).blockers.length === 0
+  }
   if (value.phase === 'launched') return value.incident === null || (value.incident.active === true && value.incident.decision === undefined)
   return Boolean(value.incident && !value.incident.active && value.incident.decision === (value.phase === 'paused' ? 'pause' : 'rollback'))
 }

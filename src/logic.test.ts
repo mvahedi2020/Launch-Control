@@ -93,6 +93,12 @@ describe('launch gate policy', () => {
     expect(canRecordDecision(plan, 'no-go', 'x'.repeat(MAX_RATIONALE_LENGTH + 1))).toBe(false)
   })
 
+  it('rejects a restored pre-launch Go that conflicts with current blockers', () => {
+    const plan = clonePlan(samplePlan)
+    plan.decision = { value: 'go', note: 'Approved earlier', recordedAt: 'before restore' }
+    expect(isLaunchPlan(plan)).toBe(false)
+  })
+
   it('makes launch and incident transitions idempotent', () => {
     const plan = clonePlan(samplePlan)
     plan.dependencies[1].state = 'ready'
