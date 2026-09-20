@@ -8,6 +8,10 @@
 
 **Product decision.** Launch Control models a disciplined launch conversation. It deliberately stops short of deployment orchestration or incident management: every action, person, evidence record, and outcome is fictional and device-local.
 
+### Restore, input, and export contracts
+
+The browser session preserves incompatible saved JSON until the reviewer explicitly chooses Reset sample; the app shows the sample plan for continued review and does not overwrite the raw payload on mount. Evidence and decision rationale each accept at most 500 characters in the UI and in restored-plan validation. A pre-launch saved Go is accepted only when current required gates still pass; otherwise the saved session is rejected as inconsistent so an old approval cannot bypass a blocker. Export notices describe the plan at the moment of export and clear as soon as a plan edit changes that snapshot.
+
 ## Users and job to be done
 
 | User | Job | Evidence needed before acting |
