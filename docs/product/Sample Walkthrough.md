@@ -4,6 +4,8 @@ This walkthrough uses only the fictional Northstar Analytics 2.4 plan. It demons
 
 ## Read the initial blocker
 
+Reset now asks for confirmation: **Keep current session** cancels, while **Reset session** replaces the local plan with the seeded fixtures.
+
 Choose **Reset sample** first to replace any browser-local state with the fictional fixtures; this is the explicit replacement action. If saved data is incompatible, the app first preserves that raw browser payload, shows the sample plan with a warning, and leaves the choice to the reviewer. Open **Command**. The seeded plan shows **Support enablement** as **Watching** with the note “Final brief pending.” Because that dependency is not Ready, **Support runbook rehearsed** remains locked. The launch control is disabled even though the other required checks show completed sample records.
 
 The sample makes a policy distinction: a readiness percentage or a completed-looking checklist does not itself permit launch. A required dependency must have an owner and be Ready; the related mandatory check must then have an owner, completion, and nonblank evidence. The displayed evidence is a review input, not proof that an underlying event occurred.
