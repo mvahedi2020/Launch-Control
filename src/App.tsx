@@ -134,10 +134,10 @@ export default function App() {
     </header>
     <main>
       {warning && <div className="warning" role="alert"><AlertTriangle size={18} />{warning}</div>}
-      {exportNotice && <div className="warning" role="status"><ShieldCheck size={18} />{exportNotice}</div>}
+      {exportNotice && <div className="warning" role="status" aria-live="polite"><ShieldCheck size={18} />{exportNotice}</div>}
       {view === 'command' && <>
         <section className="command-head"><div><p className="eyebrow">Release command · {plan.window}</p><h1>{plan.name}</h1><p>Resolve every required gate, record the decision, then run a simulated launch.</p></div><div className={`phase ${plan.phase}`}><span /><div><small>Current state</small><b>{phaseLabel}</b></div></div></section>
-        <section className="scorebar" aria-label="Launch readiness summary"><div className="score"><strong>{status.passed}<small> / {status.total}</small></strong><span>Required gates ready</span></div><div className="progress"><span style={{ width: `${status.total ? status.passed / status.total * 100 : 0}%` }} /></div><div className="score-note">{status.blockers.length ? <><AlertTriangle size={17} /><b>{status.blockers.length} blocker{status.blockers.length === 1 ? '' : 's'} before launch</b></> : <><CircleCheck size={17} /><b>All required gates cleared</b></>}</div></section>
+        <section className="scorebar" aria-label="Launch readiness summary"><div className="score"><strong>{status.passed}<small> / {status.total}</small></strong><span>Required gates ready</span></div><div className="progress" role="progressbar" aria-valuemin={0} aria-valuemax={status.total} aria-valuenow={status.passed} aria-label="Required gates ready"><span style={{ width: `${status.total ? status.passed / status.total * 100 : 0}%` }} /></div><div className="score-note" role="status" aria-live="polite">{status.blockers.length ? <><AlertTriangle size={17} /><b>{status.blockers.length} blocker{status.blockers.length === 1 ? '' : 's'} before launch</b></> : <><CircleCheck size={17} /><b>All required gates cleared</b></>}</div></section>
 
         <div className="command-grid"><section className="gate-stack">
           <div className="section-title"><div><p className="eyebrow">01 · Dependencies</p><h2>Resolve upstream work</h2></div><span>{plan.dependencies.filter((item) => item.state === 'ready' && item.ownerId).length} of {plan.dependencies.length}</span></div>
