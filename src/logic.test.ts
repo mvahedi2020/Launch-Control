@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, MAX_EVIDENCE_LENGTH, MAX_RATIONALE_LENGTH, newTimelineId, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, exportPayload, isLaunchPlan, MAX_EVIDENCE_LENGTH, MAX_RATIONALE_LENGTH, newTimelineId, openSampleIncident, readiness, recordDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
 
 describe('launch gate policy', () => {
+  it('exports a recomputable readiness snapshot with the fictional boundary', () => {
+    const payload = exportPayload(samplePlan, '2026-09-20T12:00:00Z')
+    expect(payload.boundary).toBe('Fictional simulation; no production action')
+    expect(payload.summary.blockers).toEqual(readiness(samplePlan).blockers)
+    expect(payload.launch).toEqual(samplePlan)
+  })
   it('blocks launch on unresolved dependencies and mandatory checks', () => {
     expect(readiness(samplePlan).blockers).toEqual(['Support enablement is watching', 'Support runbook rehearsed is waiting on a dependency'])
     expect(checkUnlocked(samplePlan, 'support')).toBe(false)

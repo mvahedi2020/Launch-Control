@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ArrowUpRight, Check, ChevronRight, CircleCheck, Clock3, Download, RotateCcw, ShieldCheck, Zap } from 'lucide-react'
 import { clonePlan, samplePlan } from './data'
-import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, isLaunchPlan, MAX_EVIDENCE_LENGTH, MAX_RATIONALE_LENGTH, newTimelineId, openSampleIncident, ownerName, readiness, recordDecision as saveDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
+import { appendEvent, appendEvidenceSnapshot, canLaunch, canRecordDecision, checkUnlocked, exportPayload, isLaunchPlan, MAX_EVIDENCE_LENGTH, MAX_RATIONALE_LENGTH, newTimelineId, openSampleIncident, ownerName, readiness, recordDecision as saveDecision, resolveSampleIncident, revokeGoIfBlocked, simulateLaunch } from './logic'
 import type { GateState, LaunchPlan } from './types'
 
 const STORAGE_KEY = 'northstar.launch-control.session.v1'
@@ -97,7 +97,7 @@ export default function App() {
     setPlan((current) => appendEvidenceSnapshot(current, id, previous, evidence, at))
   }
   const exportSummary = () => {
-    const payload = { product: 'Launch Control sample', boundary: 'Fictional simulation; no production action', exportedAt: new Date().toISOString(), summary: { phase: plan.phase, recordedDecision: plan.decision?.value ?? 'none', blockers: status.blockers }, readiness: status, launch: plan }
+    const payload = exportPayload(plan, new Date().toISOString())
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))
     const link = document.createElement('a'); link.href = url; link.download = 'launch-control-summary.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000)
     setExportSignature(JSON.stringify(plan))

@@ -68,6 +68,11 @@ export function readiness(plan: LaunchPlan) {
   return { passed: items.filter((item) => item.passed).length, total: items.length, blockers: items.filter((item) => !item.passed).map((item) => item.reason) }
 }
 
+export function exportPayload(plan: LaunchPlan, exportedAt: string) {
+  const status = readiness(plan)
+  return { product: 'Launch Control sample', boundary: 'Fictional simulation; no production action', exportedAt, summary: { phase: plan.phase, recordedDecision: plan.decision?.value ?? 'none', blockers: status.blockers }, readiness: status, launch: plan }
+}
+
 export function canLaunch(plan: LaunchPlan): boolean {
   return plan.phase === 'prelaunch' && readiness(plan).blockers.length === 0 && plan.decision?.value === 'go'
 }
