@@ -96,7 +96,10 @@ export default function App() {
     if (previous === evidence) return
     evidenceSnapshotRef.current[id] = evidence
     const at = now()
-    setPlan((current) => appendEvidenceSnapshot(current, id, previous, evidence, at))
+    setPlan((current) => {
+      const next = { ...current, checks: current.checks.map((check) => check.id === id ? { ...check, evidence } : check) }
+      return appendEvidenceSnapshot(next, id, previous, evidence, at)
+    })
   }
   const exportSummary = () => {
     const payload = exportPayload(plan, new Date().toISOString())
