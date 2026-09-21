@@ -17,6 +17,21 @@ test('preserves incompatible saved launch data until explicit reset', async ({ p
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('northstar.launch-control.session.v1')!).version)).toBe(1)
 })
 
+test('traps reset confirmation focus and restores it on Escape', async ({ page }) => {
+  const reset = page.getByRole('button', { name: 'Reset sample' })
+  await reset.focus()
+  await reset.click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Keep current session' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Reset session' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Keep current session' })).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(reset).toBeFocused()
+})
+
 test('enforces gates, records go, and completes a simulated launch', async ({ page }) => {
   const launch = page.getByRole('button', { name: 'Simulate launch' })
   await expect(launch).toBeDisabled()

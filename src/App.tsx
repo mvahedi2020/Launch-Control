@@ -33,6 +33,11 @@ export default function App() {
   const [exportNotice, setExportNotice] = useState('')
   const [exportSignature, setExportSignature] = useState('')
   const [resetPending, setResetPending] = useState(false)
+  const resetButtonRef = useRef<HTMLButtonElement>(null)
+  const cancelResetRef = useRef<HTMLButtonElement>(null)
+  const resetDialogRef = useRef<HTMLElement>(null)
+  const resetPreviousFocusRef = useRef<HTMLElement | null>(null)
+  const resetWasOpenRef = useRef(false)
   const evidenceSnapshotRef = useRef(evidenceSnapshots(initial.plan))
   const status = readiness(plan)
   const prelaunchOpen = plan.phase === 'prelaunch'
@@ -62,6 +67,29 @@ export default function App() {
       setExportSignature('')
     }
   }, [exportSignature, plan])
+
+  useEffect(() => {
+    if (resetPending) {
+      resetPreviousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : resetButtonRef.current
+      cancelResetRef.current?.focus()
+    } else if (resetWasOpenRef.current) resetPreviousFocusRef.current?.focus()
+    resetWasOpenRef.current = resetPending
+  }, [resetPending])
+
+  useEffect(() => {
+    if (!resetPending) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); setResetPending(false); return }
+      if (event.key !== 'Tab') return
+      const controls = [...(resetDialogRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [])]
+      const first = controls[0]
+      const last = controls.at(-1)
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+    }
+    addEventListener('keydown', onKeyDown)
+    return () => removeEventListener('keydown', onKeyDown)
+  }, [resetPending])
 
   const reset = () => {
     setPlan(clonePlan(samplePlan)); setDecisionChoice(''); setDecisionNote('')
@@ -174,7 +202,7 @@ export default function App() {
 
       {view === 'about' && <section className="about-page"><p className="eyebrow">Independent sample</p><h1>Governance you can inspect.</h1><p className="lede">Launch Control is a fictional portfolio artifact for Northstar, a fictional B2B SaaS company. It simulates readiness and launch decisions entirely in the browser. It has no authentication, production integrations, notifications, or paid services.</p><div className="about-grid"><article><h2>My role as Product Manager</h2><p>I defined the product problem, launch-policy tradeoffs, requirements, workflows, fictional sample data, acceptance criteria, and evaluation plan. AI tools assisted with implementation and verification.</p></article><article><h2>Boundaries</h2><p>No button here deploys software, contacts a person, changes traffic, or rolls back a real release. All names and records are sample data.</p></article></div><a className="case-link" href="https://github.com/mvahedi2020/Launch-Control/blob/main/docs/product/PRD.md">Read the PRD <ArrowUpRight size={18} /></a><a className="case-link" href="https://github.com/mvahedi2020/Launch-Control/blob/main/docs/product/Case_Study.md">Read the product case study <ArrowUpRight size={18} /></a></section>}
     </main>
-    {resetPending && <div className="warning" role="dialog" aria-modal="true" aria-labelledby="reset-title"><strong id="reset-title">Reset this sample?</strong><span>This clears the local launch session and restores the seeded blockers.</span><button type="button" onClick={() => setResetPending(false)}>Keep current session</button><button type="button" onClick={reset}>Reset session</button></div>}
-    <footer><span>Northstar sample · No real systems connected</span><button type="button" onClick={() => setResetPending(true)}><RotateCcw size={15} />Reset sample</button><button type="button" onClick={exportSummary}><Download size={15} />Export summary</button><a href="#timeline">View timeline <ChevronRight size={15} /></a></footer>
+    {resetPending && <div className="warning" role="dialog" aria-modal="true" aria-labelledby="reset-title"><section ref={resetDialogRef}><strong id="reset-title">Reset this sample?</strong><span>This clears the local launch session and restores the seeded blockers.</span><button type="button" ref={cancelResetRef} onClick={() => setResetPending(false)}>Keep current session</button><button type="button" onClick={reset}>Reset session</button></section></div>}
+    <footer><span>Northstar sample · No real systems connected</span><button type="button" ref={resetButtonRef} onClick={() => setResetPending(true)}><RotateCcw size={15} />Reset sample</button><button type="button" onClick={exportSummary}><Download size={15} />Export summary</button><a href="#timeline">View timeline <ChevronRight size={15} /></a></footer>
   </div>
 }
