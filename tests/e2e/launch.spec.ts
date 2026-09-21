@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test'
 test.beforeEach(async ({ page }) => {
   await page.goto('./')
   await page.getByRole('button', { name: 'Reset sample' }).click()
+  await page.getByRole('button', { name: 'Reset session' }).click()
 })
 
 test('preserves incompatible saved launch data until explicit reset', async ({ page }) => {
@@ -12,6 +13,7 @@ test('preserves incompatible saved launch data until explicit reset', async ({ p
   await expect(page.getByRole('alert')).toContainText('existing browser data is preserved')
   expect(await page.evaluate(() => localStorage.getItem('northstar.launch-control.session.v1'))).toBe(original)
   await page.getByRole('button', { name: 'Reset sample' }).click()
+  await page.getByRole('button', { name: 'Reset session' }).click()
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('northstar.launch-control.session.v1')!).version)).toBe(1)
 })
 

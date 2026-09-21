@@ -2,7 +2,7 @@
 
 ## Implemented sample scope
 
-Editable dependency owners and states; prerequisite-locked checks; mandatory evidence; recorded Go/No-go rationale; Go withdrawal when required gates regress; simulated launch; sample pause/rollback responses; local timeline, persistence, reset, and JSON export. Existing logic and browser tests check parts of this workflow. This is sample implementation, not a staffed delivery roadmap.
+Editable dependency owners and states; prerequisite-locked checks; mandatory evidence; recorded Go/No-go rationale; Go withdrawal when required gates regress; simulated launch; sample pause/rollback responses; local timeline, persistence, confirmed reset, accessible readiness progress, normalized evidence, and one-snapshot JSON export. Existing logic and browser tests check parts of this workflow. This is sample implementation, not a staffed delivery roadmap.
 
 ## Ordered next decisions
 
