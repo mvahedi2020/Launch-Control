@@ -30,6 +30,8 @@ Do not score a preferred response or a high readiness percentage as correct by i
 
 The scenario, evidence, and people are fictional. Local timestamps and browser persistence do not represent production audit controls. The demo has not established usability, demand, reliability, or business impact.
 
+The current recovery contract also requires an explicit confirmation before Reset sample replaces a local session. Readiness progress exposes its passed and total gate counts to assistive technology, and trimmed evidence text is the value persisted after the field is completed.
+
 ## Proposed session scoring protocol
 
 Use the same seeded scenario for every participant and record whether help was needed before a task finished. A blocker explanation passes when it identifies the missing dependency or required evidence and connects that condition to the disabled launch action; repeating the percentage alone is insufficient. Gated-flow completion passes only when the participant supplies the sample information, records a reasoned decision, and simulates launch without moderator instructions.
