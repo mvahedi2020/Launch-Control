@@ -79,6 +79,11 @@ describe('launch gate policy', () => {
     expect(samplePlan.timeline).toHaveLength(2)
   })
 
+  it('ignores duplicate timeline identities instead of corrupting the audit trail', () => {
+    const event = { id: samplePlan.timeline[0].id, at: 'later', title: 'Duplicate', detail: 'Should not append', kind: 'warning' as const }
+    expect(appendEvent(samplePlan, event)).toBe(samplePlan)
+  })
+
   it('creates distinct timeline identities for rapid events', () => {
     expect(newTimelineId('event')).not.toBe(newTimelineId('event'))
   })

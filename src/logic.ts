@@ -120,6 +120,7 @@ export function revokeGoIfBlocked(plan: LaunchPlan, at: string): LaunchPlan {
 }
 
 export function appendEvent(plan: LaunchPlan, event: TimelineEvent): LaunchPlan {
+  if (plan.timeline.some((item) => item.id.toLowerCase() === event.id.toLowerCase())) return plan
   return { ...plan, timeline: [...plan.timeline, event] }
 }
 
