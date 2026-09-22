@@ -23,3 +23,11 @@ Every person, dependency, evidence record, event, and release response is fictio
 | Persistence | Incompatible saved session | Keeps the raw browser payload untouched and displays the sample plan with a warning | Explicit Reset sample is the replacement boundary |
 | Persistence | Restored decision consistency | Rejects a pre-launch Go when current required blockers remain | A reviewer must reconstruct a valid decision from the sample state |
 | Export | Stale notice recovery | Clears the export completion notice after any plan edit; the JSON is built from one readiness snapshot | The notice never implies that an earlier export represents the current plan |
+# September 21 control clarifications
+
+| Control | Product behavior | Evidence boundary |
+| --- | --- | --- |
+| Snapshot fidelity | Export includes schema version 1 and a detached copy of the current plan. | Unit test; fictional state only. |
+| Timeline integrity | Duplicate event IDs are ignored case-insensitively. | Unit test; does not prove storage recovery. |
+| Reset messaging | Reset clears export status and returns seeded blockers after confirmation. | UI behavior requires browser verification. |
+| Dialog access | Reset confirmation exposes a labelled description and modal focus behavior. | Existing browser coverage plus local markup. |
