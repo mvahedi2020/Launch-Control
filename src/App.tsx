@@ -93,6 +93,7 @@ export default function App() {
 
   const reset = () => {
     setPlan(clonePlan(samplePlan)); setDecisionChoice(''); setDecisionNote('')
+    setExportNotice(''); setExportSignature('')
     setPreserveInvalid(false)
     evidenceSnapshotRef.current = evidenceSnapshots(samplePlan)
     try { localStorage.removeItem(STORAGE_KEY); setWarning('') } catch { setWarning('Browser storage is unavailable. The sample launch is restored for this tab.') }
