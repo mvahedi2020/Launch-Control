@@ -41,3 +41,8 @@ Use the consent-aware units and denominators in [Measurement Plan.md](Measuremen
 Record whether the participant understands that evidence text is not verified and no real software is deployed. A correct click sequence with either misconception should trigger design review even if completion targets are met. The initial five sessions identify problems and refine these tasks; they are not the later quantitative study. No sessions have been conducted.
 
 For the five formative sessions, retain every started task in the study notes, including abandonment, assistance, and a participant who chooses No-go, subject to the consent-withdrawal rule in [Measurement Plan.md](Measurement%20Plan.md). Stop expansion and return to the gate explanation if participants repeatedly treat evidence presence as truth, mistake simulated launch for deployment, or cannot explain why a required regression withdraws Go. Do not add templates, integrations, or real-data intake before that boundary is understood.
+# September 21 validation additions
+
+Focused Vitest coverage verifies that exports carry schema version 1 and a detached launch snapshot, duplicate timeline identities are ignored, and the existing gate, incident, and decision transitions remain covered. The reset dialog now exposes an accessible description and reset clears stale export feedback.
+
+These checks establish local product behavior only. They do not simulate a real deployment, traffic change, notification, or rollback.
