@@ -90,3 +90,8 @@ Research is staged. First, conduct five moderated formative sessions with produc
 | Does the incident flow end with a decision? | Completed pause or rollback responses / all started incident scenarios | 100% | The two sample response paths do not model a production incident program. |
 
 Automated checks verify the launch policy and controls; they do not establish human usability, demand, reliability, or business impact. No user research or production outcome is claimed.
+# Product integrity update · September 21, 2026
+
+Launch Control exports must remain useful as a recovery artifact after the live session changes. The contract therefore records a schema version and serializes a detached plan snapshot. Timeline identity collisions are treated as no-ops, preventing duplicate audit entries during repeated actions. Reset also removes stale export feedback so the command surface describes the restored session.
+
+All of these behaviors apply to the fictional browser simulation. No export or reset action operates a real release.
