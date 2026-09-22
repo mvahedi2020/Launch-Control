@@ -6,8 +6,10 @@ describe('launch gate policy', () => {
   it('exports a recomputable readiness snapshot with the fictional boundary', () => {
     const payload = exportPayload(samplePlan, '2026-09-20T12:00:00Z')
     expect(payload.boundary).toBe('Fictional simulation; no production action')
+    expect(payload.schemaVersion).toBe(1)
     expect(payload.summary.blockers).toEqual(readiness(samplePlan).blockers)
     expect(payload.launch).toEqual(samplePlan)
+    expect(payload.launch).not.toBe(samplePlan)
   })
   it('blocks launch on unresolved dependencies and mandatory checks', () => {
     expect(readiness(samplePlan).blockers).toEqual(['Support enablement is watching', 'Support runbook rehearsed is waiting on a dependency'])

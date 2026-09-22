@@ -70,7 +70,7 @@ export function readiness(plan: LaunchPlan) {
 
 export function exportPayload(plan: LaunchPlan, exportedAt: string) {
   const status = readiness(plan)
-  return { product: 'Launch Control sample', boundary: 'Fictional simulation; no production action', exportedAt, summary: { phase: plan.phase, recordedDecision: plan.decision?.value ?? 'none', blockers: status.blockers }, readiness: status, launch: plan }
+  return { product: 'Launch Control sample', schemaVersion: 1, boundary: 'Fictional simulation; no production action', exportedAt, summary: { phase: plan.phase, recordedDecision: plan.decision?.value ?? 'none', blockers: status.blockers }, readiness: status, launch: structuredClone(plan) }
 }
 
 export function canLaunch(plan: LaunchPlan): boolean {
