@@ -25,3 +25,8 @@ Once every required gate is clear and a current Go exists, choose **Simulate lau
 If you export before changing a dependency or check, the completion notice describes that earlier plan. Make one edit and confirm the notice clears; export again when the new state is ready for review. A pre-launch saved Go with current blockers is rejected during restore, because resolving a blocker still requires a fresh decision.
 
 The product tradeoff is intentional: the sample enforces the presence and sequence of decision inputs, while leaving evidence truth, authority, production deployment, and real incident management outside its scope. The next product question is whether launch practitioners understand that boundary without help; the [measurement plan](Measurement%20Plan.md) defines the proposed study and stop conditions.
+# Recovery and export walkthrough · September 21, 2026
+
+Export summary is a versioned, detached snapshot of the current fictional launch plan. It includes the readiness blockers and the simulation boundary, so a later in-browser edit cannot mutate an already-created payload. Reset requires an explicit confirmation and clears any prior export notice before the seeded blockers return.
+
+The reset dialog names its description for assistive technology and traps focus while open. Timeline event IDs are unique; a repeated event identity is ignored so recovery evidence does not gain duplicate audit entries.
