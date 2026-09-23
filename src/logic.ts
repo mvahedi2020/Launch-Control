@@ -79,7 +79,7 @@ export function canLaunch(plan: LaunchPlan): boolean {
 
 export function canRecordDecision(plan: LaunchPlan, value: NonNullable<Decision>['value'], note: string): boolean {
   const rationale = note.trim()
-  if (plan.phase !== 'prelaunch' || rationale.length < 4 || rationale.length > MAX_RATIONALE_LENGTH || (value === 'go' && readiness(plan).blockers.length > 0)) return false
+  if ((value !== 'go' && value !== 'no-go') || plan.phase !== 'prelaunch' || rationale.length < 4 || rationale.length > MAX_RATIONALE_LENGTH || (value === 'go' && readiness(plan).blockers.length > 0)) return false
   return plan.decision?.value !== value || plan.decision.note !== rationale
 }
 
@@ -103,7 +103,7 @@ export function openSampleIncident(plan: LaunchPlan, at: string, id: string): La
 }
 
 export function resolveSampleIncident(plan: LaunchPlan, decision: 'pause' | 'rollback', at: string, id: string): LaunchPlan {
-  if (plan.phase !== 'launched' || !plan.incident?.active) return plan
+  if ((decision !== 'pause' && decision !== 'rollback') || plan.phase !== 'launched' || !plan.incident?.active) return plan
   const phase = decision === 'pause' ? 'paused' : 'rolledback'
   return appendEvent(
     { ...plan, phase, incident: { ...plan.incident, active: false, decision } },

@@ -46,3 +46,7 @@ For the five formative sessions, retain every started task in the study notes, i
 Focused Vitest coverage verifies that exports carry schema version 1 and a detached launch snapshot, duplicate timeline identities are ignored, and the existing gate, incident, and decision transitions remain covered. The reset dialog now exposes an accessible description and reset clears stale export feedback.
 
 These checks establish local product behavior only. They do not simulate a real deployment, traffic change, notification, or rollback.
+
+# September 22 validation addition
+
+Policy helpers now reject decision and incident action values that arrive outside the declared runtime contract, even when a typed caller is bypassed at runtime. Unit coverage confirms malformed values leave the local plan unchanged. This protects the sample state boundary; it is not authorization or production incident control.

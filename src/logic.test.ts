@@ -97,6 +97,12 @@ describe('launch gate policy', () => {
     expect(recordDecision({ ...recorded, phase: 'launched' }, 'go', 'Reconsidered', 'later', 'decision-3')).toEqual({ ...recorded, phase: 'launched' })
   })
 
+  it('rejects runtime decision values outside the decision contract', () => {
+    const plan = clonePlan(samplePlan)
+    expect(canRecordDecision(plan, 'maybe' as 'go', 'Need more review')).toBe(false)
+    expect(recordDecision(plan, 'maybe' as 'go', 'Need more review', 'now', 'decision-invalid')).toBe(plan)
+  })
+
   it('bounds evidence and rationale so restored and typed values share one contract', () => {
     const plan = clonePlan(samplePlan)
     plan.dependencies[1].state = 'ready'
@@ -144,5 +150,12 @@ describe('launch gate policy', () => {
   it('only resolves an active incident from the launched phase', () => {
     const invalid = { ...samplePlan, phase: 'paused' as const, incident: { active: true, openedAt: 'now' } }
     expect(resolveSampleIncident(invalid, 'pause', 'later', 'pause-1')).toBe(invalid)
+  })
+
+  it('rejects runtime incident responses outside the two sample actions', () => {
+    const plan = clonePlan(samplePlan)
+    plan.phase = 'launched'
+    plan.incident = { active: true, openedAt: 'now' }
+    expect(resolveSampleIncident(plan, 'escalate' as 'pause', 'later', 'incident-invalid')).toBe(plan)
   })
 })

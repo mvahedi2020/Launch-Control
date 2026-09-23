@@ -31,3 +31,4 @@ Every person, dependency, evidence record, event, and release response is fictio
 | Timeline integrity | Duplicate event IDs are ignored case-insensitively. | Unit test; does not prove storage recovery. |
 | Reset messaging | Reset clears export status and returns seeded blockers after confirmation. | UI behavior requires browser verification. |
 | Dialog access | Reset confirmation exposes a labelled description and modal focus behavior. | Existing browser coverage plus local markup. |
+| Runtime action values | Decision and incident policy helpers ignore values outside Go/No-go and Pause/Roll back before mutating the plan. | Unit boundary only; no real launch or incident system is connected. |
