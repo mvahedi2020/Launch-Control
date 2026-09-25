@@ -1,5 +1,9 @@
 # Validation plan
 
+## Observed software checks — September 24, 2026
+
+On Node 24/macOS, the current checkout passed lint, strict type checks, production build, **17 policy tests**, and **10 browser workflows**. `npm audit --omit=dev` reported zero vulnerabilities. These checks establish local fictional-simulation behavior only; they do not establish production deployment, traffic control, incident response, or human usability.
+
 ## Observed software checks — September 16, 2026
 
 On Node 24/macOS, lint, strict type checks, production build, ten policy tests, and seven repository browser tests passed. `npm audit --omit=dev` reported no vulnerabilities. The policy and browser suites now cover the decision replay boundary: an unchanged recorded decision cannot create another timeline record, and repeated launch or incident actions cannot replay a completed local state transition. Saved-session checks also reject partial, unknown-reference, duplicate-timeline, and invalid phase/incident records before the command surface renders. Browser coverage verifies that pre-launch gates lock after launch while the sample incident response remains available.
