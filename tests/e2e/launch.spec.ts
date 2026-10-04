@@ -158,7 +158,10 @@ for (const width of [320, 390]) {
     await page.setViewportSize({ width, height: 633 })
     await page.goto('./')
     for (const view of ['Command', 'Timeline', 'About']) {
-      await page.getByRole('link', { name: view, exact: true }).click()
+      const navigation = page.getByRole('link', { name: view, exact: true })
+      await navigation.click()
+      await expect(navigation).toHaveClass('active')
+      await expect(page.locator('main .eyebrow').first()).toBeVisible()
       const header = await page.locator('.topbar').boundingBox()
       const active = await page.locator('.topbar nav a.active').boundingBox()
       const intro = await page.locator('main .eyebrow').first().boundingBox()
