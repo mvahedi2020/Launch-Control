@@ -152,3 +152,22 @@ test('does not duplicate an unchanged recorded decision', async ({ page }) => {
   await page.getByRole('link', { name: 'Timeline', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'No-go decision recorded' })).toHaveCount(1)
 })
+
+for (const width of [320, 390]) {
+  test(`keeps mobile navigation underline inside the header at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 633 })
+    await page.goto('./')
+    for (const view of ['Command', 'Timeline', 'About']) {
+      await page.getByRole('link', { name: view, exact: true }).click()
+      const header = await page.locator('.topbar').boundingBox()
+      const active = await page.locator('.topbar nav a.active').boundingBox()
+      const intro = await page.locator('main .eyebrow').first().boundingBox()
+      expect(header).not.toBeNull()
+      expect(active).not.toBeNull()
+      expect(intro).not.toBeNull()
+      expect(active!.y).toBeGreaterThanOrEqual(header!.y)
+      expect(active!.y + active!.height).toBeLessThanOrEqual(header!.y + header!.height)
+      expect(intro!.y).toBeGreaterThan(header!.y + header!.height)
+    }
+  })
+}
