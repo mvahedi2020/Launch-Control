@@ -6,6 +6,8 @@ Launch readiness often lives across checklists, status documents, and chat. This
 
 ![Launch Control sample workspace](docs/media/screenshot.png)
 
+Product tradeoff: renewed readiness review costs time when a gate changes. The next investment depends on better launch reasoning relative to the existing checklist and credible ownership of the evidence. See the [case study](docs/product/Case_Study.md) for the proposed comparison and investment criteria.
+
 ## Try this decision
 
 Northstar, a fictional operations platform, is preparing Analytics 2.4. Resolve Support enablement, complete the now-unlocked runbook check with sample evidence, record a go decision, and run the simulated launch. Trigger the sample post-launch issue and choose pause or rollback. Review the timestamped timeline or export the launch summary.
