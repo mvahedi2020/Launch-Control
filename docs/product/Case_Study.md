@@ -1,5 +1,9 @@
 # Launch Control case study
 
+Check the required steps before approving a practice launch. If a required condition changes, review the decision again or choose a simulated pause or rollback.
+
+**The product choice:** Require named owners and evidence for readiness, then renew the decision when conditions change. [Try the sample](https://mvahedi2020.github.io/Launch-Control/) · [Follow the walkthrough](Sample%20Walkthrough.md).
+
 ## The product problem
 
 Launch decisions often happen across status documents, chat threads, checklists, and meetings. That fragmentation makes it hard to answer basic questions: Who owns the dependency? Is the mandatory check complete? What evidence supports the decision? What happened after launch?

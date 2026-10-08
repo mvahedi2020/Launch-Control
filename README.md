@@ -1,6 +1,8 @@
 # Launch Control
 
-Launch readiness often lives across checklists, status documents, and chat. This product management case study explores how a B2B SaaS launch lead can enforce prerequisites, capture decision evidence, and preserve a clear response trail.
+Check the required steps before approving a practice launch. If a required condition changes, review the decision again or choose a simulated pause or rollback. All records in this demo are fictional.
+
+**Try it:** Find the step blocking launch, complete its sample evidence, and inspect the decision before running the simulation. [Open the demo](https://mvahedi2020.github.io/Launch-Control/) · [Follow the walkthrough](docs/product/Sample%20Walkthrough.md).
 
 **[Try the interactive demo](https://mvahedi2020.github.io/Launch-Control/)** · [Product requirements](docs/product/PRD.md) · [Case study](docs/product/Case_Study.md) · [Validation plan](docs/product/Validation.md) · [Watch the workflow](docs/media/workflow.webm)
 
