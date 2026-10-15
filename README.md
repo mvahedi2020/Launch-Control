@@ -4,6 +4,8 @@ Check the required steps before approving a practice launch. If a required condi
 
 **Try it:** Find the step blocking launch, complete its sample evidence, and inspect the decision before running the simulation. [Open the demo](https://mvahedi2020.github.io/Launch-Control/) · [Follow the walkthrough](docs/product/Sample%20Walkthrough.md).
 
+**Experience connection:** My experience includes phased releases, risk reviews and cross-functional delivery in enterprise environments. This example makes the readiness decision and its ownership visible. [Read the decision to challenge](docs/product/Case_Study.md#experience-and-decision).
+
 **[Try the interactive demo](https://mvahedi2020.github.io/Launch-Control/)** · [Product requirements](docs/product/PRD.md) · [Case study](docs/product/Case_Study.md) · [Validation plan](docs/product/Validation.md) · [Watch the workflow](docs/media/workflow.webm)
 
 ![Launch Control sample workspace](docs/media/screenshot.png)

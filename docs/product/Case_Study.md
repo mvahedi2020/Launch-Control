@@ -4,6 +4,12 @@ Check the required steps before approving a practice launch. If a required condi
 
 **The product choice:** Require named owners and evidence for readiness, then renew the decision when conditions change. [Try the sample](https://mvahedi2020.github.io/Launch-Control/) · [Follow the walkthrough](Sample%20Walkthrough.md).
 
+## Experience and decision
+
+My experience includes phased releases, risk reviews and cross-functional delivery in enterprise environments. This example makes the readiness decision and its ownership visible. This is a separate fictional portfolio exercise; its records, rules and results do not reproduce an employer system.
+
+**Decision to challenge:** What change is important enough to reopen a launch decision? Requiring fresh review protects the decision, but the policy also needs to justify the additional effort for the team.
+
 ## The product problem
 
 Launch decisions often happen across status documents, chat threads, checklists, and meetings. That fragmentation makes it hard to answer basic questions: Who owns the dependency? Is the mandatory check complete? What evidence supports the decision? What happened after launch?
