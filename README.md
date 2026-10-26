@@ -53,3 +53,7 @@ All people, evidence, launch records, and outcomes are fictional. No control dep
 ## Read the product documents
 
 [Open the formatted document index](https://mvahedi2020.github.io/Launch-Control/docs/index.html) for the case study, walkthrough, requirements, and supporting product work. Markdown files remain the source documents.
+
+## Typography
+
+The demo and product-document reader use Calibri for body text and Aptos Display for headings. Fonts use the viewer’s installed copies; approved local fallbacks keep the pages readable when a primary font is unavailable. No font files or external font service are loaded.
